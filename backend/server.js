@@ -34,7 +34,7 @@ app.use(express.json());
 // Connect to the database
 connectDB().then(() => {
     // Start the server if database connection is successful
-    const port = process.env.Port;
+    const port = process.env.PORT|| 8080;
     app.listen(port, () => {
         console.log(`Server is running at ${port}`);
     });
