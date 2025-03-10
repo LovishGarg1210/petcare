@@ -11,7 +11,7 @@ const OrderHistory = () => {
   useEffect(() => {
     const fetchOrders = async () => {
       // Replace this with actual API call to fetch orders
-      const orderData = await axios.get("http://localhost:4000/Order/allOrderhistory");
+      const orderData = await axios.get("https://petcare-1.onrender.com/Order/allOrderhistory");
       
       console.log(orderData);
       setOrders(orderData.data.data);

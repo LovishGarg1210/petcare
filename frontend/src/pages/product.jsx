@@ -16,7 +16,7 @@ const PetProductsPage = () => {
   // Fetch products from backend
   const fetchProducts = async () => {
     try {
-      const response = await axios.get('http://localhost:4000/product/Get'); // Replace with your actual API endpoint
+      const response = await axios.get('https://petcare-1.onrender.com/product/Get'); // Replace with your actual API endpoint
       const productsData = response.data.data; // Assuming the response has the products
 
       // Set products data
@@ -33,7 +33,7 @@ const PetProductsPage = () => {
   // Fetch carousel images from backend
   const fetchCarouselImages = async () => {
     try {
-      const response = await axios.get('http://localhost:4000/Crousel/get'); // Replace with your actual API endpoint
+      const response = await axios.get('https://petcare-1.onrender.com/Crousel/get'); // Replace with your actual API endpoint
       setSliderImages(response.data.data); // Assuming the response has the images
     } catch (error) {
       console.error('Error fetching carousel images:', error);
@@ -44,7 +44,7 @@ const PetProductsPage = () => {
   const Get = async () => {
     try {
       const emailId = localStorage.getItem('user');
-      const data = await axios.get(`http://localhost:4000/Cart/Get?emailId=${emailId}`);
+      const data = await axios.get(`https://petcare-1.onrender.com/Cart/Get?emailId=${emailId}`);
       setCart(data.data.data.products);
 
     } catch (error) {
@@ -59,7 +59,7 @@ const PetProductsPage = () => {
   }, []);
 
   // API URL for adding products to the cart
-  const apiUrl = "http://localhost:4000/Cart/Add";
+  const apiUrl = "https://petcare-1.onrender.com/Cart/Add";
 
   const addToCart = async (product) => {
     const emailId = localStorage.getItem('user');

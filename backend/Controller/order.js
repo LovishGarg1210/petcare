@@ -22,8 +22,8 @@ const Payment = async (req, res) => {
                 quantity: item.productQuantity,
             })),
             mode: 'payment',
-            success_url: `http://localhost:4000/Order/Success?session_id={CHECKOUT_SESSION_ID}`,
-            cancel_url: `http://localhost:4000/cancel`,
+            success_url: `https://petcare-1.onrender.com/Order/Success?session_id={CHECKOUT_SESSION_ID}`,
+            cancel_url: `https://petcare-1.onrender.com/cancel`,
             customer_email: emailId,
             // Handle address collection
              // Add the countries you want to support

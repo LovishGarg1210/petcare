@@ -31,7 +31,7 @@ const EditProfile = () => {
       }
 
       try {
-        const response = await axios.get('http://localhost:4000/Signup/Get', {
+        const response = await axios.get('https://petcare-1.onrender.com/Signup/Get', {
           params: { email },
         });
         
@@ -87,7 +87,7 @@ const EditProfile = () => {
     try {
       // Make a POST request to update the user profile data
       const email = localStorage.getItem('user');
-      const response = await axios.put('http://localhost:4000/Signup/Update', {
+      const response = await axios.put('https://petcare-1.onrender.com/Signup/Update', {
         email,
         Name: user.Name,
         Contact: user.Contact,

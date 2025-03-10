@@ -12,7 +12,7 @@ const PetStorePage = () => {
 
 const  Pets=async()=>{
   try {
-    const response=await axios.get("http://localhost:4000/pet/get");
+    const response=await axios.get("https://petcare-1.onrender.com/pet/get");
     console.log(response.data.data);
     setPets(response.data.data);
     
@@ -57,7 +57,7 @@ const  Pets=async()=>{
   const handleSubmit = async(e) => {
     e.preventDefault();
     console.log(formData)
-    const response=await axios.post(`http://localhost:4000/Application/Save/${selectedPet._id}`,formData);
+    const response=await axios.post(`https://petcare-1.onrender.com/Application/Save/${selectedPet._id}`,formData);
     console.log(response);
 
 

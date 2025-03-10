@@ -20,7 +20,7 @@ function ProductPage() {
     const fetchData = async () => {
         setLoading(true);  // Set loading true while fetching
         try {
-            const response = await axios.get('http://localhost:4000/product/Get');
+            const response = await axios.get('https://petcare-1.onrender.com/product/Get');
             // Normalize the categories to lowercase when setting them
             const normalizedProducts = response.data.data.map((product) => ({
                 ...product,
@@ -80,12 +80,12 @@ function ProductPage() {
             }
             if (editingId) {
                 // Edit existing product
-                response = await axios.put(`http://localhost:4000/product/Update/${editingId}`, formData, {
+                response = await axios.put(`https://petcare-1.onrender.com/product/Update/${editingId}`, formData, {
                     headers: { 'Content-Type': 'multipart/form-data' }
                 });
             } else {
                 // Add new product
-                response = await axios.post('http://localhost:4000/product/Save', formData, {
+                response = await axios.post('https://petcare-1.onrender.com/product/Save', formData, {
                     headers: { 'Content-Type': 'multipart/form-data' }
                 });
             }
@@ -126,7 +126,7 @@ function ProductPage() {
         const confirmDelete = window.confirm("Are you sure you want to delete this product?");
         if (confirmDelete) {
             try {
-                await axios.delete(`http://localhost:4000/product/Delete/${id}`);
+                await axios.delete(`https://petcare-1.onrender.com/product/Delete/${id}`);
                 alert('Product deleted successfully');
                 await fetchData(); // Re-fetch the products after deletion
             } catch (error) {

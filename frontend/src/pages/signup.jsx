@@ -24,7 +24,7 @@ const RegistrationForm = () => {
 
     // Send data to API
     try {
-      const response = await fetch("http://localhost:4000/Signup/Save", {
+      const response = await fetch("https://petcare-1.onrender.com/Signup/Save", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

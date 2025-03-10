@@ -21,7 +21,7 @@ const LoginWithGoogleButton = () => {
 
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:4000/Signup/validate', data);
+      const response = await axios.post('https://petcare-1.onrender.com/Signup/validate', data);
       console.log(response);
       disptach(setUser(response.data.data.Email));
       localStorage.setItem('user', response.data.data.Email);

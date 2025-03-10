@@ -8,7 +8,7 @@ const AboutPage = () => {
   useEffect(() => {
     const fetchServices = async () => {
       try {
-        const response = await fetch("http://localhost:4000/About/Get");
+        const response = await fetch("https://petcare-1.onrender.com/About/Get");
         const data = await response.json();
         setServices(data.data);
         console.log(data);

@@ -14,7 +14,7 @@ const AppointmentPage = () => {
   const fetchAppointments = async () => {
     try {
       setLoading(true);
-      const response = await axios.get('http://localhost:4000/Appointment/Get'); // Update the endpoint accordingly
+      const response = await axios.get('https://petcare-1.onrender.com/Appointment/Get'); // Update the endpoint accordingly
       setAppointments(response.data);  // Assuming the API returns an array of appointments
       setLoading(false);
     } catch (error) {

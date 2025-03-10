@@ -47,7 +47,7 @@ const UpdateEmailPassword = () => {
       const email = localStorage.getItem('user'); // Get email from localStorage
 
       // Make a request to update the password
-      const response = await axios.put('http://localhost:4000/Signup/Update-Password', {
+      const response = await axios.put('https://petcare-1.onrender.com/Signup/Update-Password', {
         email, // The current email (for validation)
         currentPassword,
         newPassword,
