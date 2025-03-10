@@ -1,0 +1,22 @@
+/* Shiny Text Effect */
+@keyframes shiny {
+    0% {
+      background-position: -400% 0;
+    }
+    100% {
+      background-position: 400% 0;
+    }
+  }
+  
+  .shiny-text {
+    display: inline-block;
+    position: relative;
+    color: white;
+    font-weight: bold;
+    background: linear-gradient(90deg, #ff6a00, #ee0979, #ff6a00, #ff6a00);
+    background-size: 400% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    animation: shiny 3s linear infinite;
+  }
+  
