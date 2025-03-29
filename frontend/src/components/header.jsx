@@ -3,7 +3,7 @@ import { FaFacebook, FaInstagram, FaTwitter, FaEnvelope, FaPhone } from "react-i
 
 const Header = () => {
   return (
-    <header className="flex justify-between mb-1 items-center py-4 px-8 bg-gray-100 opacity-40 text-black shadow-lg">
+    <header className=" hidden md:flex justify-between mb-1 items-center py-4 px-8 bg-gray-100 opacity-40 text-black shadow-lg">
       {/* Left Side: Address */}
       <div className="text-xl font-semibold">
         <p className="hover:text-gray-300 transition duration-300">

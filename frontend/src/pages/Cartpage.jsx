@@ -110,40 +110,48 @@ const CartPage = () => {
         );
     };
 
-    // Handle checkout process
     const handlePayment = async () => {
         if (!isAddressSaved) {
             alert("Please provide a shipping address before proceeding to checkout.");
             return;
         }
-
+    
         const emailId = localStorage.getItem('user');
         const orderData = {
             emailId,
-           
             items: cartItems,
             totalAmount: calculateTotal(),
         };
-
+    
         try {
             const response = await axios.post('https://petcare-1.onrender.com/Order/create-payment-intent', orderData);
             const { id } = response.data;
-
+    
             const stripe = await stripePromise;
-
-            // Redirect to the Stripe Checkout page
-            const { error } = await stripe.redirectToCheckout({
-                sessionId: id,
-            });
-            
-
-            if (error) {
-                console.error("Error redirecting to Checkout:", error);
+    
+            // Check if user is on mobile by checking the window width
+            const isMobile = window.innerWidth <= 768;
+    
+            if (isMobile) {
+                // On mobile, redirect to Stripe Checkout in the same tab
+                const { error } = await stripe.redirectToCheckout({
+                    sessionId: id,
+                });
+    
+                if (error) {
+                    console.error("Error redirecting to Checkout:", error);
+                }
+            } else {
+                // On desktop, open the Stripe Checkout page in a new tab
+                window.open(`https://checkout.stripe.com/pay/${id}`, '_blank');
             }
+    
         } catch (error) {
             console.error("Error starting checkout process", error);
+            alert("An error occurred while processing your payment. Please try again.");
         }
     };
+    
 
     // Handle remove item
     const handleRemoveItem = async (productId) => {

@@ -21,7 +21,6 @@ function ProductPage() {
         setLoading(true);  // Set loading true while fetching
         try {
             const response = await axios.get('https://petcare-1.onrender.com/product/Get');
-            // Normalize the categories to lowercase when setting them
             const normalizedProducts = response.data.data.map((product) => ({
                 ...product,
                 category: product.category.toLowerCase(),
@@ -35,12 +34,10 @@ function ProductPage() {
         setLoading(false); // Set loading false after fetching
     };
 
-    // Fetch products from the backend
     useEffect(() => {
         fetchData();
     }, []);
 
-    // Handle form input change
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setNewProduct({
@@ -49,7 +46,6 @@ function ProductPage() {
         });
     };
 
-    // Handle image file input
     const handleImageChange = (e) => {
         const file = e.target.files[0];
         setNewProduct({
@@ -58,20 +54,17 @@ function ProductPage() {
         });
     };
 
-    // Handle category filter change
     const handleCategoryChange = (e) => {
-        setSelectedCategory(e.target.value.toLowerCase());  // Normalize to lowercase
+        setSelectedCategory(e.target.value.toLowerCase());
     };
 
-    // Filter products by category
     const filteredProducts = selectedCategory
         ? products.filter((product) => product.category === selectedCategory)
         : products;
 
-    // Handle Add/Edit Product form submission
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setLoading(true);  // Set loading true while submitting
+        setLoading(true);
         try {
             let response;
             const formData = new FormData();
@@ -79,12 +72,10 @@ function ProductPage() {
                 formData.append(key, newProduct[key]);
             }
             if (editingId) {
-                // Edit existing product
                 response = await axios.put(`https://petcare-1.onrender.com/product/Update/${editingId}`, formData, {
                     headers: { 'Content-Type': 'multipart/form-data' }
                 });
             } else {
-                // Add new product
                 response = await axios.post('https://petcare-1.onrender.com/product/Save', formData, {
                     headers: { 'Content-Type': 'multipart/form-data' }
                 });
@@ -100,15 +91,14 @@ function ProductPage() {
                     category: '',
                     quantity: '',
                 });
-                fetchData(); // Re-fetch the products
+                fetchData();
             }
         } catch (error) {
             console.error(error);
         }
-        setLoading(false);  // Set loading false after submitting
+        setLoading(false);
     };
 
-    // Handle Edit
     const handleEdit = (product) => {
         setNewProduct({
             name: product.name,
@@ -121,21 +111,19 @@ function ProductPage() {
         setIsModalOpen(true);
     };
 
-    // Handle Delete
     const handleDelete = async (id) => {
         const confirmDelete = window.confirm("Are you sure you want to delete this product?");
         if (confirmDelete) {
             try {
                 await axios.delete(`https://petcare-1.onrender.com/product/Delete/${id}`);
                 alert('Product deleted successfully');
-                await fetchData(); // Re-fetch the products after deletion
+                await fetchData();
             } catch (error) {
                 console.error(error);
             }
         }
     };
 
-    // Loader component
     const Loader = () => (
         <div className="flex justify-center items-center w-full h-full">
             <div className="w-16 h-16 border-4 border-t-4 border-gray-300 border-t-yellow-500 rounded-full animate-spin"></div>
@@ -143,41 +131,37 @@ function ProductPage() {
     );
 
     return (
-        <div className="min-h-screen ml-64 mt-16 p-6 w-[100%]">
+        <div className="min-h-screen md:mt-16 mt-20 lg:ml-64 lg:mt-16 p-6 w-full">
             {loading && <Loader />} {/* Show loader while loading data */}
             
-            <div className="flex justify-between">
-                <h1 className="text-3xl font-semibold mb-6">Product Page</h1>
+            <div className="flex justify-between items-center flex-wrap">
+                <h1 className="text-2xl md:text-3xl font-semibold mb-4">Product Page</h1>
 
-                {/* Add Product Button */}
                 <button
                     onClick={() => setIsModalOpen(true)}
-                    className="bg-yellow-500 text-white p-3 rounded-lg mb-6 flex items-center space-x-2"
+                    className="bg-yellow-500 text-white p-3 rounded-lg mb-4 flex items-center space-x-2"
                 >
                     <Plus />
                     <span>Add Product</span>
                 </button>
             </div>
 
-            {/* Category Filter */}
-            <div className="mb-6">
+            <div className="mb-4">
                 <select
                     value={selectedCategory}
                     onChange={handleCategoryChange}
-                    className="p-3 bg-black text-white rounded-lg"
+                    className="p-3 bg-black text-white rounded-lg w-full md:w-auto"
                 >
                     <option value="">All Categories</option>
                     {categories.map((category, index) => (
                         <option key={index} value={category}>
-                            {category.charAt(0).toUpperCase() + category.slice(1)} {/* Capitalize the first letter */}
+                            {category.charAt(0).toUpperCase() + category.slice(1)}
                         </option>
                     ))}
                 </select>
             </div>
 
-            {/* Product Table */}
-            <div className=" p-6 rounded-lg shadow-md">
-                <h3 className="text-xl font-semibold text-black mb-4">Product Table</h3>
+            <div className="overflow-x-auto">
                 <table className="min-w-full table-auto text-black">
                     <thead>
                         <tr>
@@ -233,15 +217,13 @@ function ProductPage() {
                 </table>
             </div>
 
-            {/* Modal for Add/Edit Product */}
             {isModalOpen && (
                 <div className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50 z-50">
-                    <div className="bg-gray-800 p-6 rounded-lg w-1/2">
+                    <div className="bg-gray-800 p-6 rounded-lg w-11/12 md:w-2/3 lg:w-1/2">
                         <h2 className="text-2xl font-semibold text-white mb-4">
                             {editingId ? 'Edit Product' : 'Add Product'}
                         </h2>
                         <form onSubmit={handleSubmit}>
-                            {/* Form Fields */}
                             <input
                                 type="text"
                                 name="name"
@@ -280,7 +262,6 @@ function ProductPage() {
                                 placeholder="Product Quantity"
                                 className="w-full mb-4 p-3 rounded-lg bg-gray-700 text-white"
                             />
-                            {/* Submit Button */}
                             <button
                                 type="submit"
                                 className="bg-yellow-500 text-white p-3 rounded-lg w-full"

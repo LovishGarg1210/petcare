@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { clearUser, setUser } from '../reduxtoolkit/Slice'; // Add setUser action
 import { FaUserCircle } from 'react-icons/fa'; // Account icon
+import { HiMenu, HiX } from 'react-icons/hi'; // Icons for the hamburger menu
 
 const Navbar = () => {
   const dispatch = useDispatch();
@@ -10,6 +11,7 @@ const Navbar = () => {
   console.log(userEmail); // Get user state from Redux store
  
   const [dropdownVisible, setDropdownVisible] = useState(false); // State to toggle dropdown visibility
+  const [menuOpen, setMenuOpen] = useState(false); // State to toggle mobile menu
 
   // Function to handle dropdown toggle
   const toggleDropdown = () => {
@@ -30,6 +32,11 @@ const Navbar = () => {
     }
   }, [dispatch]);
 
+  // Function to toggle the mobile menu
+  const toggleMenu = () => {
+    setMenuOpen(!menuOpen);
+  };
+
   return (
     <nav className="bg-white p-4 shadow-md">
       <div className="container mx-auto flex items-center justify-between">
@@ -43,8 +50,15 @@ const Navbar = () => {
           <h1 className="text-2xl font-bold text-black">PetCare</h1>
         </div>
 
-        {/* Navigation Links */}
-        <div className="flex space-x-6">
+        {/* Hamburger Menu for Mobile */}
+        <div className="md:hidden">
+          <button onClick={toggleMenu}>
+            {menuOpen ? <HiX className="text-3xl" /> : <HiMenu className="text-3xl" />}
+          </button>
+        </div>
+
+        {/* Desktop Navigation Links */}
+        <div className={`hidden md:flex space-x-6`}>
           <Link to="/" className="text-black text-xl hover:text-gray-200 transition duration-300">Home</Link>
           <Link to="/about" className="text-black text-xl hover:text-gray-200 transition duration-300">About</Link>
           <Link to="/services" className="text-black text-xl hover:text-gray-200 transition duration-300">Services</Link>
@@ -54,7 +68,7 @@ const Navbar = () => {
         </div>
 
         {/* Account and Login/Signup Buttons */}
-        <div className="flex space-x-4 relative">
+        <div className="hidden md:flex space-x-4 relative">
           {userEmail ? (
             <div className="flex items-center space-x-2" onClick={toggleDropdown}>
               <FaUserCircle className="text-xl cursor-pointer" />
@@ -74,6 +88,31 @@ const Navbar = () => {
           )}
         </div>
       </div>
+
+      {/* Mobile Menu */}
+      {menuOpen && (
+        <div className="md:hidden flex flex-col space-y-4 mt-4 bg-white p-4 shadow-md">
+          <Link to="/" onClick={toggleMenu} className="text-black text-lg hover:text-gray-500 transition duration-300">Home</Link>
+          <Link to="/about" onClick={toggleMenu} className="text-black text-lg hover:text-gray-500 transition duration-300">About</Link>
+          <Link to="/services" onClick={toggleMenu} className="text-black text-lg hover:text-gray-500 transition duration-300">Services</Link>
+          <Link to="/products" onClick={toggleMenu} className="text-black text-lg hover:text-gray-500 transition duration-300">Products</Link>
+          <Link to="/pets" onClick={toggleMenu} className="text-black text-lg hover:text-gray-500 transition duration-300">Own Pet</Link>
+          <Link to="/appointments" onClick={toggleMenu} className="text-black text-lg hover:text-gray-500 transition duration-300">Appointments</Link>
+
+          {/* Mobile Account/Login/Signup Buttons */}
+          {userEmail ? (
+            <>
+              <Link to="/profile" onClick={toggleMenu} className="text-black text-lg hover:text-gray-500 transition duration-300">My Profile</Link>
+              <button onClick={handleLogout} className="text-black text-lg hover:text-gray-500 transition duration-300">Logout</button>
+            </>
+          ) : (
+            <>
+              <Link to="/login" onClick={toggleMenu} className="text-black text-lg hover:text-gray-500 transition duration-300">Login</Link>
+              <Link to="/signup" onClick={toggleMenu} className="text-black text-lg hover:text-gray-500 transition duration-300">Signup</Link>
+            </>
+          )}
+        </div>
+      )}
     </nav>
   );
 };

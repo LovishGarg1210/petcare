@@ -9,44 +9,38 @@ const PetProductsPage = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [currentSlide, setCurrentSlide] = useState(0);
   const [cart, setCart] = useState([]);
-  const [products, setProducts] = useState([]); // Store products fetched from backend
-  const [categories, setCategories] = useState([]); // Store categories extracted from products
-  const [sliderImages, setSliderImages] = useState([]); // Store carousel images
+  const [products, setProducts] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [sliderImages, setSliderImages] = useState([]);
 
-  // Fetch products from backend
   const fetchProducts = async () => {
     try {
-      const response = await axios.get('https://petcare-1.onrender.com/product/Get'); // Replace with your actual API endpoint
-      const productsData = response.data.data; // Assuming the response has the products
+      const response = await axios.get('https://petcare-1.onrender.com/product/Get');
+      const productsData = response.data.data;
 
-      // Set products data
       setProducts(productsData);
 
-      // Extract unique categories from products data
       const uniqueCategories = ["All", ...new Set(productsData.map(product => product.category))];
-      setCategories(uniqueCategories); // Set categories (including "All")
+      setCategories(uniqueCategories);
     } catch (error) {
       console.error('Error fetching products:', error);
     }
   };
 
-  // Fetch carousel images from backend
   const fetchCarouselImages = async () => {
     try {
-      const response = await axios.get('https://petcare-1.onrender.com/Crousel/get'); // Replace with your actual API endpoint
-      setSliderImages(response.data.data); // Assuming the response has the images
+      const response = await axios.get('https://petcare-1.onrender.com/Crousel/get');
+      setSliderImages(response.data.data);
     } catch (error) {
       console.error('Error fetching carousel images:', error);
     }
   };
 
-  // Get cart data
   const Get = async () => {
     try {
       const emailId = localStorage.getItem('user');
       const data = await axios.get(`https://petcare-1.onrender.com/Cart/Get?emailId=${emailId}`);
       setCart(data.data.data.products);
-
     } catch (error) {
       console.error("Error fetching cart:", error);
     }
@@ -58,7 +52,6 @@ const PetProductsPage = () => {
     Get();
   }, []);
 
-  // API URL for adding products to the cart
   const apiUrl = "https://petcare-1.onrender.com/Cart/Add";
 
   const addToCart = async (product) => {
@@ -95,17 +88,14 @@ const PetProductsPage = () => {
     }
   };
 
-  // Filter products by selected category
   const filteredProducts = selectedCategory === "All"
     ? products
     : products.filter((product) => product.category === selectedCategory);
 
-  // Filter products based on search query
   const searchFilteredProducts = filteredProducts.filter((product) =>
     product.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  // Slide show logic for rotating through the images
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentSlide((prevSlide) => (prevSlide + 1) % sliderImages.length);
@@ -116,11 +106,12 @@ const PetProductsPage = () => {
   return (
     <div className="container mx-auto p-6">
       {/* Header Section */}
-      <header className="flex items-center justify-between py-4 px-8 bg-white border border-gray-300 rounded-lg shadow-lg mb-8">
-        <h1 className="text-3xl font-bold text-gray-800">My Store</h1>
+      <header className="flex items-center justify-between py-4 px-6 bg-white border border-gray-300 rounded-lg shadow-lg mb-8">
+        {/* "My Store" only for md screens and larger */}
+        <h1 className="hidden md:block text-3xl font-bold text-gray-800">My Store</h1>
 
         {/* Search Bar */}
-        <div className="relative flex items-center w-2/3">
+        <div className="relative flex items-center w-full md:w-2/3">
           <FaSearch className="absolute left-4 text-gray-500" size={20} />
           <input
             type="text"
@@ -132,7 +123,7 @@ const PetProductsPage = () => {
         </div>
 
         {/* Cart Icon */}
-        <div className="relative">
+        <div className="relative ml-4">
           <button onClick={() => navigate('/cartPage')} className="bg-gray-300 p-3 rounded-full">
             <span role="img" aria-label="cart">🛒</span>
           </button>
@@ -143,10 +134,10 @@ const PetProductsPage = () => {
       {/* Slider Section */}
       <div className="relative mb-8">
         <div
-          className="w-full h-64 bg-cover bg-no-repeat bg-center"
+          className="w-full h-64 bg-cover bg-no-repeat bg-center rounded-lg shadow-lg"
           style={{ backgroundImage: `url(${sliderImages[currentSlide]?.Url})` }}
         >
-          <div className="absolute inset-0 opacity-50"></div>
+          <div className="absolute inset-0 bg-black bg-opacity-30"></div>
           <div className="absolute top-0 left-0 right-0 bottom-0 flex items-center justify-between p-4">
             <button
               onClick={() => setCurrentSlide((currentSlide - 1 + sliderImages.length) % sliderImages.length)}
@@ -176,16 +167,15 @@ const PetProductsPage = () => {
 
       {/* Filter Section */}
       <div className="mb-8 text-center py-4 px-8 bg-white border border-gray-300 rounded-lg shadow-lg">
-        <div className="flex justify-center space-x-9">
+        <div className="flex flex-wrap justify-center gap-4">
           {categories.map((category) => (
-            <div key={category} className="text-center">
-              <button
-                onClick={() => setSelectedCategory(category)}
-                className={`px-6 py-2 text-black ${selectedCategory === category ? "font-bold" : ""}`}
-              >
-                {category}
-              </button>
-            </div>
+            <button
+              key={category}
+              onClick={() => setSelectedCategory(category)}
+              className={`px-4 py-2 text-black ${selectedCategory === category ? "font-bold" : ""}`}
+            >
+              {category}
+            </button>
           ))}
         </div>
       </div>
@@ -194,10 +184,10 @@ const PetProductsPage = () => {
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
         {searchFilteredProducts.length > 0 ? (
           searchFilteredProducts.map((product) => (
-            <div key={product._id} className="bg-white border border-gray-300 rounded-lg shadow-lg p-4 ">
+            <div key={product._id} className="bg-white border border-gray-300 rounded-lg shadow-lg p-4">
               <img src={product.image} alt={product.name} className="w-full h-40 object-cover rounded-lg" />
-              <h3 className="text-xl font-semibold text-gray-800 mt-4">{product.name}</h3>
-              <p className="text-lg text-gray-500 mt-2">${product.price.toFixed(2)}</p>
+              <h3 className="text-lg font-semibold text-gray-800 mt-4">{product.name}</h3>
+              <p className="text-md text-gray-500 mt-2">${product.price.toFixed(2)}</p>
               <button
                 onClick={() => addToCart(product)}
                 className="mt-4 w-full py-2 bg-gray-500 text-white rounded-lg"
@@ -207,7 +197,7 @@ const PetProductsPage = () => {
             </div>
           ))
         ) : (
-          <p>No products found</p>
+          <p className="text-center text-gray-500">No products found</p>
         )}
       </div>
     </div>

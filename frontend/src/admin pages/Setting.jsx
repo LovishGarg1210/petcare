@@ -27,7 +27,6 @@ const Setting = () => {
       const email = localStorage.getItem('user');
       try {
         const response = await axios.get('https://petcare-1.onrender.com/Signup/Get', { params: { email } });
-        console.log(response);
         setProfile(response.data.user);
       } catch (error) {
         console.error('Error fetching profile data:', error);
@@ -114,15 +113,15 @@ const Setting = () => {
   };
 
   return (
-    <div className="mx-auto min-h-screen ml-64 mt-16 py-12 px-4 w-full">
+    <div className="mx-auto min-h-screen mt-20  md:ml-64 md:mt-16 py-12 px-4 w-full">
       <h1 className="text-2xl font-bold mb-6">Admin Settings</h1>
       
       {/* Profile Settings */}
       <div className="mb-12">
         <h2 className="text-xl font-semibold mb-4">Profile Settings</h2>
         <form onSubmit={handleProfileSubmit} className="space-y-4">
-          <div className="flex space-x-4">
-            <div className="w-1/2">
+          <div className="flex flex-col md:flex-row md:space-x-4">
+            <div className="md:w-1/2">
               <label className="block font-semibold">Username</label>
               <input
                 type="text"
@@ -132,7 +131,7 @@ const Setting = () => {
                 className="w-full p-2 border rounded"
               />
             </div>
-            <div className="w-1/2">
+            <div className="md:w-1/2 mt-4 md:mt-0">
               <label className="block font-semibold">Email</label>
               <input
                 type="email"
@@ -177,8 +176,8 @@ const Setting = () => {
               className="w-full p-2 border rounded"
             />
           </div>
-          <div className="flex space-x-4">
-            <div className="w-1/2">
+          <div className="flex flex-col md:flex-row md:space-x-4">
+            <div className="md:w-1/2">
               <label className="block font-semibold">New Password</label>
               <input
                 type="password"
@@ -188,7 +187,7 @@ const Setting = () => {
                 className="w-full p-2 border rounded"
               />
             </div>
-            <div className="w-1/2">
+            <div className="md:w-1/2 mt-4 md:mt-0">
               <label className="block font-semibold">Confirm New Password</label>
               <input
                 type="password"
@@ -237,7 +236,6 @@ const Setting = () => {
             </label>
           </div>
 
-          {/* Align the buttons to the right */}
           <div className="flex justify-between space-x-4">
             <button
               type="submit"

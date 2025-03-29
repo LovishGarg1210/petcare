@@ -3,16 +3,15 @@ import { Plus } from 'lucide-react';
 import axios from 'axios';
 
 function Services() {
-    const [ServiceData, setService] = useState([]);  // Ensure it's initialized as an empty array
+    const [ServiceData, setService] = useState([]);  
     const [newData, setNewData] = useState({
         heading: '',
         paragraph: '',
         image: null,
     });
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [editingId, setEditingId] = useState(null);  // Track the ID of the item being edited
+    const [editingId, setEditingId] = useState(null); 
 
-    // Handle form input change
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setNewData({
@@ -21,7 +20,6 @@ function Services() {
         });
     };
 
-    // Handle image file input
     const handleImageChange = (e) => {
         const file = e.target.files[0];
         setNewData({
@@ -44,20 +42,17 @@ function Services() {
             }
         };
         Getdata();
-    });  // Use empty array to ensure it runs only once
+    }, []);
 
-    // Handle form submission (Add or Edit data)
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
             let response;
             if (editingId) {
-                // Update existing data
                 response = await axios.put(`https://petcare-1.onrender.com/Service/Update/${editingId}`, newData, {
                     headers: { 'Content-Type': 'multipart/form-data' }
                 });
             } else {
-                // Add new data
                 response = await axios.post("https://petcare-1.onrender.com/Service/Save", newData, {
                     headers: { 'Content-Type': 'multipart/form-data' }
                 });
@@ -66,34 +61,32 @@ function Services() {
             if (response) {
                 alert('Data Saved Successfully');
                 setIsModalOpen(false);
-                setEditingId(null);  // Reset editing ID
-                setNewData({ heading: '', paragraph: '', image: null });  // Reset form fields
-                await Getdata();  // Re-fetch data to update the table
+                setEditingId(null);  
+                setNewData({ heading: '', paragraph: '', image: null }); 
+                await Getdata();  
             }
         } catch (error) {
             console.error(error);
         }
     };
 
-    // Handle Edit
     const handleEdit = (data) => {
         setNewData({
             heading: data.heading,
             paragraph: data.paragraph,
-            image: null,  // If you want to edit the image, you'll need to handle it
+            image: null,
         });
-        setEditingId(data._id);  // Set editing ID
-        setIsModalOpen(true);  // Open the modal for editing
+        setEditingId(data._id);  
+        setIsModalOpen(true);  
     };
 
-    // Handle Delete
     const handleDelete = async (id) => {
         const confirmDelete = window.confirm("Are you sure you want to delete this data?");
         if (confirmDelete) {
             try {
                 await axios.delete(`https://petcare-1.onrender.com/Service/Delete/${id}`);
                 alert('Data deleted successfully');
-                await Getdata();  // Re-fetch data after deletion
+                await Getdata();  
             } catch (error) {
                 console.error(error);
             }
@@ -101,28 +94,26 @@ function Services() {
     };
 
     return (
-        <div className="min-h-screen ml-64 mt-16 p-6 w-[100%]">
-            <div className='flex justify-between'>
+        <div className="min-h-screen ml-0 md:ml-64 mt-20 md:mt-16 p-6 w-full">
+            <div className="flex justify-between">
                 <h1 className="text-3xl font-semibold mb-6">Service Page</h1>
 
-                {/* Add Data Button */}
                 <button
                     onClick={() => setIsModalOpen(true)}
-                    className="bg-yellow-500 text-white p-3 rounded-lg mb-6 flex items-center space-x-2"
+                    className="bg-yellow-500 text-white p-3 md:p-3 rounded-lg mb-6 flex items-center md:space-x-2"
                 >
                     <Plus />
-                    <span>Add New Data</span>
+                    <span className='hidden md:block'>Add New Data</span>
                 </button>
             </div>
 
-            {/* About Data Table */}
-            <div className=" p-6 rounded-lg shadow-md">
-                <h3 className="text-xl font-semibold text-black mb-4">service Data Table</h3>
+            <div className="p-6 rounded-lg shadow-md">
+                <h3 className="text-xl font-semibold text-black mb-4">Service Data Table</h3>
                 <table className="min-w-full table-auto text-black">
                     <thead>
                         <tr>
                             <th className="px-4 py-2 border-b">Heading</th>
-                            <th className="px-4 py-2 border-b">Paragraph</th>
+                            <th className="px-4 py-2 border-b hidden md:table-cell">Paragraph</th> {/* Hide paragraph in small screens */}
                             <th className="px-4 py-2 border-b">Image</th>
                             <th className="px-4 py-2 border-b">Actions</th>
                         </tr>
@@ -130,15 +121,15 @@ function Services() {
                     <tbody>
                         {Array.isArray(ServiceData) && ServiceData.length > 0 ? (
                             ServiceData.map((data) => (
-                                <tr key={data._id} className=" text-center ">
+                                <tr key={data._id} className="text-center">
                                     <td className="px-4 py-2 border-b">{data.heading}</td>
-                                    <td className="px-4 py-2 border-b">{data.paragraph}</td>
+                                    <td className="px-4 py-2 border-b hidden md:table-cell">{data.paragraph}</td> 
                                     <td className="px-4 py-2 text-center border-b">
                                         {data.image && (
                                             <img
                                                 src={data.image}
                                                 alt={data.heading}
-                                                className=" w-full h-20 bg-cover  rounded-lg"
+                                                className="w-full h-20 bg-cover rounded-lg"
                                             />
                                         )}
                                     </td>
@@ -167,10 +158,9 @@ function Services() {
                 </table>
             </div>
 
-            {/* Modal */}
             {isModalOpen && (
                 <div className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50 z-50">
-                    <div className="bg-gray-800 p-6 rounded-lg w-1/2">
+                    <div className="bg-gray-800 p-6 rounded-lg w-full max-w-2xl mx-4">
                         <h2 className="text-2xl font-semibold text-white mb-4">
                             {editingId ? "Edit" : "Add"} Service Data
                         </h2>
