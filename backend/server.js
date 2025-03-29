@@ -28,11 +28,10 @@ dotenv.config();
 // Middleware setup
 app.use(express.static("public"));
 app.use(fileuploader());
-app.use(cors());
-// app.use(cors({
-//     // origin:['https://petcare99.netlify.app','http://localhost:5173'],
+// app.use(cors());
+ app.use(cors({   origin:['https://petcare99.netlify.app',],
    
-// }));
+}));
 app.use(express.json());
 
 // Connect to the database
