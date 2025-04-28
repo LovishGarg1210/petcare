@@ -70,7 +70,7 @@ const Success = async (req, res) => {
       await order.save();
   // Backend: Encoding items before sending
 const serializedItems = encodeURIComponent(JSON.stringify(order.items)); // Stringify and encode
-const successUrl = `http://localhost:5173/success?orderId=${order._id}&email=${session.customer_email}&totalAmount=${order.totalAmount}&items=${serializedItems}`;
+const successUrl = `https://petcare-1.onrender.com/success?orderId=${order._id}&email=${session.customer_email}&totalAmount=${order.totalAmount}&items=${serializedItems}`;
 res.redirect(successUrl);
 
       // Redirect to the success page with order details as URL parameters

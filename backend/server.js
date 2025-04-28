@@ -29,11 +29,10 @@ dotenv.config();
 app.use(express.static("public"));
 app.use(fileuploader());
 // app.use(cors());
- app.use(cors({   origin:['https://petcare99.netlify.app',],
+ app.use(cors({   origin:['https://petcare99.netlify.app' ],
    
 }));
 app.use(express.json());
-
 // Connect to the database
 connectDB().then(() => {
     // Start the server if database connection is successful
