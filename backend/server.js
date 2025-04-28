@@ -29,7 +29,7 @@ dotenv.config();
 app.use(express.static("public"));
 app.use(fileuploader());
 // app.use(cors());
- app.use(cors({   origin:['https://petcare99.netlify.app' ],
+ app.use(cors({   origin:['https://petcare99.netlify.app',"https://petcare-1.onrender.com "],
    
 }));
 app.use(express.json());
