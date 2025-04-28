@@ -29,8 +29,9 @@ const PetProductsPage = () => {
 
   const fetchCarouselImages = async () => {
     try {
-      const response = await axios.get('https://petcare-1.onrender.com/Crousel/get');
+      const response = await axios.get('https://petcare-1.onrender.com/Crousel/Get');
       setSliderImages(response.data.data);
+      console.log(response.data.data)
     } catch (error) {
       console.error('Error fetching carousel images:', error);
     }
