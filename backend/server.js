@@ -21,7 +21,6 @@ const OrderRouter=require("../backend/Router/order");
 
 // Initialize express app
 const app = express();
-
 // Load environment variables
 dotenv.config();
 

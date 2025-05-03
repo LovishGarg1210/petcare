@@ -10,6 +10,8 @@ const Signup = async (req, res) => {
       res.status(400).json({ message: "Email already exists" });
       return;
     }
+    
+
 
     await Signupdata.create({ Name, Email, Contact, Password, Address });
     res.status(201).json({ user });

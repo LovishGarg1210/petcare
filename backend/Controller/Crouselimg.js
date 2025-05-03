@@ -18,7 +18,8 @@ const SaveCrouselImage=async(req,res)=>{
                 console.log(filepath);
                 
                 await cloudinary.uploader.upload(filepath).then(function(result){
-                    filename=result.url;
+                    filename = result.secure_url; // This is always HTTPS
+
                 })
 
             }
