@@ -6,7 +6,7 @@ const ServicesPage = () => {
   // Fetch data from the backend
   useEffect(() => {
     // Replace with your actual backend API URL
-    fetch("https://petcare-1.onrender.com/Service/Get")
+    fetch("http://localhost:4000/Service/Get")
       .then((response) => response.json())
       .then((data) => setServices(data.data))
       .catch((error) => console.error("Error fetching services:", error));
@@ -25,23 +25,30 @@ const ServicesPage = () => {
           </p>
         </div>
 
-        {/* Services Section */}
-        <div className="mt-12 grid gap-12 lg:grid-cols-3 sm:grid-cols-1">
-          {services.map((service, index) => (
-            <div key={index} className="relative bg-white rounded-lg shadow-xl overflow-hidden">
-              <img
-                src={service.image} // Image URL from backend
-                alt={service.heading}  // Alt text from backend
-                className="w-full h-72 object-cover transition-all duration-300 ease-in-out hover:scale-110"
-              />
-              <div className="absolute inset-0 bg-black opacity-40"></div>
-              <div className="relative p-8 text-center text-white">
-                <h2 className="text-2xl font-semibold mb-4">{service.heading}</h2>
-                <p className="text-lg">{service.paragraph}</p>
-              </div>
-            </div>
-          ))}
+     {/* Services Section */}
+<div className="mt-12 grid gap-12 lg:grid-cols-3 sm:grid-cols-1">
+  {services.length > 0 ? (
+    services.map((service, index) => (
+      <div key={index} className="relative bg-white rounded-lg shadow-xl overflow-hidden">
+        <img
+          src={service.image}
+          alt={service.heading}
+          className="w-full h-72 object-cover transition-all duration-300 ease-in-out hover:scale-110"
+        />
+        <div className="absolute inset-0 bg-black opacity-40"></div>
+        <div className="relative p-8 text-center text-white">
+          <h2 className="text-2xl font-semibold mb-4">{service.heading}</h2>
+          <p className="text-lg">{service.paragraph}</p>
         </div>
+      </div>
+    ))
+  ) : (
+    <div className="flex justify-center items-center h-40 w-full">
+      <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+    </div>
+  )}
+</div>
+
 
         {/* Call to Action Section */}
         <div className="text-center mt-16">

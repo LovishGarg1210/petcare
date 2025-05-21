@@ -23,7 +23,7 @@ const CartPage = () => {
         const emailId = localStorage.getItem('user'); // Get emailId from localStorage
         if (emailId) {
             try {
-                const response = await axios.get(`https://petcare-1.onrender.com/Cart/Get?emailId=${emailId}`);
+                const response = await axios.get(`http://localhost:4000/Cart/Get?emailId=${emailId}`);
                 setCartItems(response.data.data.products); // Assuming products are in `data.products`
                 setLoading(false);
             } catch (error) {
@@ -57,7 +57,7 @@ const CartPage = () => {
       const emailId = localStorage.getItem('user');
       if (emailId) {
           try {
-              await axios.put('https://petcare-1.onrender.com/Cart/Update', { emailId, products: updatedItems });
+              await axios.put('http://localhost:4000/Cart/Update', { emailId, products: updatedItems });
           } catch (error) {
               console.error('Error updating cart:', error);
           }
@@ -91,7 +91,7 @@ const CartPage = () => {
         if (validateAddress()) {
             if (email) {
                 try {
-                    await axios.post('https://petcare-1.onrender.com/Signup/SaveAddress', { email, address });
+                    await axios.post('http://localhost:4000/Signup/SaveAddress', { email, address });
                     setIsAddressSaved(true); // Mark address as saved
                 } catch (error) {
                     console.error("Error saving address", error);
@@ -124,7 +124,7 @@ const CartPage = () => {
         };
     
         try {
-            const response = await axios.post('https://petcare-1.onrender.com/Order/create-payment-intent', orderData);
+            const response = await axios.post('http://localhost:4000/Order/create-payment-intent', orderData);
             const { id } = response.data;
     
             const stripe = await stripePromise;
@@ -142,8 +142,14 @@ const CartPage = () => {
                     console.error("Error redirecting to Checkout:", error);
                 }
             } else {
-                // On desktop, open the Stripe Checkout page in a new tab
-                window.open(`https://checkout.stripe.com/pay/${id}`, '_blank');
+                const { error } = await stripe.redirectToCheckout({
+                    sessionId: id,
+                });
+    
+                if (error) {
+                    console.error("Error redirecting to Checkout:", error);
+                }
+               
             }
     
         } catch (error) {
@@ -159,7 +165,7 @@ const CartPage = () => {
         
         try {
             // Sending the request with emailId and productId in the request body
-            const response = await axios.post("https://petcare-1.onrender.com/Cart/Delete", { emailId, productId});
+            const response = await axios.post("http://localhost:4000/Cart/Delete", { emailId, productId});
     
             if (response.status === 200) {
                 alert("Item removed successfully");
@@ -219,7 +225,7 @@ const CartPage = () => {
                                         <div className="flex items-center justify-between w-full sm:w-1/2">
                                             <div className="text-center">
                                                 <p className="text-sm text-gray-500">Price</p>
-                                                <p className="font-medium">${item.productPrice.toFixed(2)}</p>
+                                                <p className="font-medium">Rs{item.productPrice.toFixed(2)}</p>
                                             </div>
                                             <div className="text-center">
                                                 <p className="text-sm text-gray-500">Quantity</p>
@@ -241,7 +247,7 @@ const CartPage = () => {
                                             </div>
                                             <div className="text-center">
                                                 <p className="text-sm text-gray-500">Total</p>
-                                                <p className="font-medium">${(item.productPrice * item.productQuantity).toFixed(2)}</p>
+                                                <p className="font-medium">Rs{(item.productPrice * item.productQuantity).toFixed(2)}</p>
                                             </div>
                                             <button
                                                 onClick={() => handleRemoveItem(item.productId)}

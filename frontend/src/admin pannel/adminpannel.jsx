@@ -14,6 +14,7 @@ import AppointmentPage from '../admin pages/Appointments';
 import Setting from '../admin pages/Setting';
 import OrderHistory from '../admin pages/OrderHistory';
 import AdminProtectedRoutes from './AdminProtectedRoutes.jsx';
+import SellPetApplications from '../admin pages/SellPetapplication.jsx';
 
 const Adminpannel = () => {
   return (
@@ -32,6 +33,7 @@ const Adminpannel = () => {
               <Route path="/pet" element={<Pets />} />
               <Route path="/application" element={<Application />} />
               <Route path="/appointment" element={<AppointmentPage />} />
+               <Route path="/SellPet" element={<SellPetApplications />} />
               <Route path="/settings" element={<Setting />} />
               <Route path="/order-history" element={<OrderHistory />} />
             </Route>

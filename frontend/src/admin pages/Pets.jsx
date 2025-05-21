@@ -7,15 +7,16 @@ const Pets = () => {
   const [filteredPets, setFilteredPets] = useState([]);
   const [showPetModal, setShowPetModal] = useState(false);
   const [editingPet, setEditingPet] = useState(null);
+  const [loading, setLoading] = useState(false); // Loader state
   const [formData, setFormData] = useState({
     name: "",
     description: "",
     category: "",
     image: null,
-    imagePreview: null, // Add this for image preview
+    imagePreview: null,
   });
-  const [categories, setCategories] = useState([]); // State to store unique categories
-  const [selectedCategory, setSelectedCategory] = useState(""); // State for selected category
+  const [categories, setCategories] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState("");
 
   useEffect(() => {
     fetchPets();
@@ -25,66 +26,53 @@ const Pets = () => {
     if (selectedCategory) {
       setFilteredPets(pets.filter((pet) => pet.category === selectedCategory));
     } else {
-      setFilteredPets(pets); // Show all pets if no category is selected
+      setFilteredPets(pets);
     }
   }, [selectedCategory, pets]);
 
   const fetchPets = async () => {
+    setLoading(true);
     try {
-      const response = await axios.get("https://petcare-1.onrender.com/pet/Get");
+      const response = await axios.get("http://localhost:4000/pet/Get");
       const allPets = response.data.data;
       setPets(allPets);
       setFilteredPets(allPets);
-
-      // Extract unique categories
-      const uniqueCategories = [
-        ...new Set(allPets.map((pet) => pet.category).filter((category) => category)),
-      ];
+      const uniqueCategories = [...new Set(allPets.map(p => p.category).filter(Boolean))];
       setCategories(uniqueCategories);
     } catch (error) {
       console.error("Error fetching pets:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
     const data = new FormData();
     data.append("name", formData.name);
     data.append("description", formData.description);
     data.append("category", formData.category);
-
-    // Only append image if a new file is selected
     if (formData.image instanceof File) {
       data.append("image", formData.image);
     }
 
     try {
       if (editingPet) {
-        // For PUT requests, only include image if it's changed
-        await axios.put(
-          `https://petcare-1.onrender.com/pet/Update/${editingPet._id}`,
-          data,
-          {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-          }
-        );
+        await axios.put(`http://localhost:4000/pet/Update/${editingPet._id}`, data, {
+          headers: { "Content-Type": "multipart/form-data" },
+        });
       } else {
-        await axios.post(
-          "https://petcare-1.onrender.com/pet/Save",
-          data,
-          {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-          }
-        );
+        await axios.post("http://localhost:4000/pet/Save", data, {
+          headers: { "Content-Type": "multipart/form-data" },
+        });
       }
       await fetchPets();
       resetForm();
     } catch (error) {
       console.error("Error saving pet:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -101,7 +89,7 @@ const Pets = () => {
 
   const deletePet = async (id) => {
     try {
-      await axios.delete(`https://petcare-1.onrender.com/pet/Delete/${id}`);
+      await axios.delete(`http://localhost:4000/pet/Delete/${id}`);
       setPets(pets.filter((pet) => pet._id !== id));
       setFilteredPets(filteredPets.filter((pet) => pet._id !== id));
     } catch (error) {
@@ -128,10 +116,18 @@ const Pets = () => {
       description: pet.description,
       category: pet.category,
       image: pet.image,
-      imagePreview: pet.image, // Use existing image URL as preview
+      imagePreview: pet.image,
     });
     setShowPetModal(true);
   };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-white">
+        <div className="w-12 h-12 border-4 border-yellow-500 border-dashed rounded-full animate-spin"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen py-12 px-4 w-full md:ml-64 mt-20 md:mt-16 flex justify-center">
@@ -164,11 +160,7 @@ const Pets = () => {
           <div className="flex gap-4 flex-wrap">
             <button
               onClick={() => setSelectedCategory("")}
-              className={`px-4 py-2 rounded-xl ${
-                !selectedCategory
-                  ? "bg-yellow-600 text-white"
-                  : "bg-gray-200 text-gray-700"
-              }`}
+              className={`px-4 py-2 rounded-xl ${!selectedCategory ? "bg-yellow-600 text-white" : "bg-gray-200 text-gray-700"}`}
             >
               All
             </button>
@@ -176,11 +168,7 @@ const Pets = () => {
               <button
                 key={category}
                 onClick={() => setSelectedCategory(category)}
-                className={`px-4 py-2 rounded-xl ${
-                  selectedCategory === category
-                    ? "bg-yellow-600 text-white"
-                    : "bg-gray-200 text-gray-700"
-                }`}
+                className={`px-4 py-2 rounded-xl ${selectedCategory === category ? "bg-yellow-600 text-white" : "bg-gray-200 text-gray-700"}`}
               >
                 {category}
               </button>
@@ -204,9 +192,7 @@ const Pets = () => {
                 <div className="flex-grow">
                   <div className="flex justify-between items-start">
                     <div>
-                      <h2 className="text-xl font-semibold text-yellow-900">
-                        {pet.name}
-                      </h2>
+                      <h2 className="text-xl font-semibold text-yellow-900">{pet.name}</h2>
                       <span className="inline-block px-3 py-1 rounded-full text-sm font-medium bg-yellow-100 text-yellow-600 mt-2">
                         {pet.category || "Uncategorized"}
                       </span>
@@ -226,16 +212,14 @@ const Pets = () => {
                       </button>
                     </div>
                   </div>
-                  <p className="text-gray-600 mt-3 line-clamp-2">
-                    {pet.description}
-                  </p>
+                  <p className="text-gray-600 mt-3 line-clamp-2">{pet.description}</p>
                 </div>
               </div>
             </div>
           ))}
         </div>
 
-        {/* Add/Edit Pet Modal */}
+        {/* Modal */}
         {showPetModal && (
           <div className="fixed inset-0 flex items-center justify-center bg-black/50 backdrop-blur-sm z-70">
             <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md p-8">
@@ -285,9 +269,7 @@ const Pets = () => {
                 </div>
 
                 <div className="flex flex-col gap-3">
-                  <label className="text-yellow-800 font-medium">
-                    Description
-                  </label>
+                  <label className="text-yellow-800 font-medium">Description</label>
                   <textarea
                     className="border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-yellow-500"
                     value={formData.description}

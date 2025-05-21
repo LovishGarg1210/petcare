@@ -15,7 +15,7 @@ function Crouselimg() {
 
   const fetchImages = async () => {
     try {
-      const response = await axios.get("https://petcare-1.onrender.com/Crousel/Get");
+      const response = await axios.get("http://localhost:4000/Crousel/Get");
       if (Array.isArray(response.data.data)) {
         setImages(response.data.data);
       }
@@ -35,7 +35,7 @@ function Crouselimg() {
     formData.append("caption", newImage.caption);
 
     try {
-      const response = await axios.post("https://petcare-1.onrender.com/Crousel/Save", formData, {
+      const response = await axios.post("http://localhost:4000/Crousel/Save", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
       setImages((prevImages) => [...prevImages, response.data.data]);
@@ -50,7 +50,7 @@ function Crouselimg() {
 
   const deleteImage = async (id) => {
     try {
-      await axios.delete(`https://petcare-1.onrender.com/Crousel/Delete/${id}`);
+      await axios.delete(`http://localhost:4000/Crousel/Delete/${id}`);
       setImages((prevImages) => prevImages.filter((image) => image._id !== id));
     } catch (error) {
       console.error("Error deleting image:", error);
@@ -66,7 +66,7 @@ function Crouselimg() {
 
     try {
       const response = await axios.put(
-        `https://petcare-1.onrender.com/Crousel/Update/${editImage._id}`,
+        `http://localhost:4000/Crousel/Update/${editImage._id}`,
         { caption: editImage.caption }
       );
       setImages((prevImages) =>

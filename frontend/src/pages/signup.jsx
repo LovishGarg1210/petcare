@@ -1,54 +1,121 @@
-import React, { useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
+import { jwtDecode } from "jwt-decode";
+import { useNavigate } from "react-router-dom";
 
 const RegistrationForm = () => {
-  // State to hold form data
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     Name: "",
     Email: "",
     Contact: "",
     Password: "",
+    Code: "",
   });
+  const [otpSent, setOtpSent] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  // Handle input changes
+  const googleButtonRef = useRef(null);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
+    setFormData({ ...formData, [name]: value });
   };
 
-  // Handle form submission
-  const handleSubmit = async (e) => {
-    e.preventDefault(); // Prevent default form submission
-
-    // Send data to API
+  // Step 1: Send OTP to email
+  const handleSendOtp = async () => {
+    if (!formData.Email) return alert("Please enter your email first.");
     try {
-      const response = await fetch("https://petcare-1.onrender.com/Signup/Save", {
+      setLoading(true);
+      const response = await fetch("http://localhost:4000/Signup/verifyotp", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData), // Send form data as JSON
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ Email: formData.Email }),
       });
-
-      const result = await response.json();
+      const data = await response.json();
+      setLoading(false);
 
       if (response.ok) {
-        console.log("User registered successfully:", result);
-        // Optionally redirect or handle success
+        alert("OTP sent to your email.");
+        setOtpSent(true);
       } else {
-        console.error("Error registering user:", result);
-        // Handle error response from the API
+        alert(data.message);
       }
     } catch (error) {
-      console.error("Error occurred while registering:", error);
-      // Handle network or other errors
+      setLoading(false);
+      alert("Error sending OTP. Try again.");
+    }
+  };
+
+  // Step 2: Submit form with OTP
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!otpSent) return alert("Please verify your email first.");
+
+    try {
+      setLoading(true);
+      const response = await fetch("http://localhost:4000/Signup/save", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+      const result = await response.json();
+      setLoading(false);
+
+      if (response.ok) {
+        alert("User registered successfully!");
+        navigate("/login");
+      } else {
+        alert(result.message);
+      }
+    } catch (error) {
+      setLoading(false);
+      alert("Error occurred during registration.");
+    }
+  };
+
+  // Google Sign-In
+  useEffect(() => {
+    if (window.google && googleButtonRef.current) {
+      window.google.accounts.id.initialize({
+        client_id: "162599922941-l7mfp5v1er99chlcvd5jsu03uo77mqp1.apps.googleusercontent.com",
+        callback: handleGoogleResponse,
+      });
+
+      window.google.accounts.id.renderButton(googleButtonRef.current, {
+        theme: "outline",
+        size: "large",
+        width: "100%",
+      });
+    }
+  }, []);
+
+  const handleGoogleResponse = async (response) => {
+    const userObject = jwtDecode(response.credential);
+    try {
+      const res = await fetch("http://localhost:4000/Signup/GoogleSave", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          Name: userObject.name,
+          Email: userObject.email,
+          GoogleId: userObject.sub,
+        }),
+      });
+      const result = await res.json();
+      if (res.ok) {
+        alert("Google sign-up successful!");
+        navigate("/login");
+      } else {
+        alert(`Google sign-up failed! ${result.message}`);
+        navigate("/login");
+      }
+    } catch (err) {
+      console.error(`Google Sign-In Error:`, err);
     }
   };
 
   return (
-    <div className="h-[100vh] items-center flex justify-center px-5 lg:px-0">
+    <div className="h-[130vh] items-center flex justify-center px-5 lg:px-0">
       <div className="max-w-screen-lg bg-white shadow sm:rounded-lg flex justify-center flex-1">
         <div className="flex-1 w-full hidden md:flex">
           <div
@@ -60,74 +127,91 @@ const RegistrationForm = () => {
         </div>
         <div className="lg:w-1/2 xl:w-5/12 p-6 sm:p-12">
           <div className="flex flex-col items-center">
-            <div className="text-center">
-              <h1 className="text-2xl xl:text-4xl font-extrabold text-black">
-                Sign up
-              </h1>
-              <p className="text-[12px] text-gray-500 mt-2 ">
-                Hey enter your details to create your account
-              </p>
-            </div>
-            <div className="w-full flex-1 mt-8">
-              <div className="mx-auto max-w-xs flex flex-col gap-4">
-                <input
-                  className="w-full px-5 py-3 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white"
-                  type="text"
-                  name="Name"
-                  placeholder="Enter your name"
-                  value={formData.Name}
-                  onChange={handleChange}
-                />
-                <input
-                  className="w-full px-5 py-3 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white"
-                  type="email"
-                  name="Email"
-                  placeholder="Enter your email"
-                  value={formData.Email}
-                  onChange={handleChange}
-                />
-                <input
-                  className="w-full px-5 py-3 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white"
-                  type="tel"
-                  name="Contact"
-                  placeholder="Enter your phone"
-                  value={formData.Contact}
-                  onChange={handleChange}
-                />
-                <input
-                  className="w-full px-5 py-3 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white"
-                  type="password"
-                  name="Password"
-                  placeholder="Password"
-                  value={formData.Password}
-                  onChange={handleChange}
-                />
+            <h1 className="text-2xl xl:text-4xl font-extrabold text-black text-center">
+              Sign up
+            </h1>
+            <p className="text-sm text-gray-500 text-center mt-2">
+              Enter your details to create your account
+            </p>
+
+            <form onSubmit={handleSubmit} className="w-full mt-8 max-w-xs mx-auto flex flex-col gap-4">
+              <input
+                type="text"
+                name="Name"
+                placeholder="Enter your name"
+                value={formData.Name}
+                onChange={handleChange}
+                required
+                className="px-5 py-3 rounded-lg bg-gray-100 border text-sm"
+              />
+              <input
+                type="email"
+                name="Email"
+                placeholder="Enter your email"
+                value={formData.Email}
+                onChange={handleChange}
+                required
+                className="px-5 py-3 rounded-lg bg-gray-100 border text-sm"
+              />
+              <input
+                type="tel"
+                name="Contact"
+                placeholder="Enter your phone"
+                value={formData.Contact}
+                onChange={handleChange}
+                required
+                className="px-5 py-3 rounded-lg bg-gray-100 border text-sm"
+              />
+              <input
+                type="password"
+                name="Password"
+                placeholder="Password"
+                value={formData.Password}
+                onChange={handleChange}
+                required
+                className="px-5 py-3 rounded-lg bg-gray-100 border text-sm"
+              />
+
+              {!otpSent ? (
                 <button
-                  className="mt-5 tracking-wide font-semibold bg-black text-gray-100 w-full py-4 rounded-lg hover:bg-white  hover:text-black transition-all duration-300 ease-in-out flex items-center justify-center focus:shadow-outline focus:outline-none"
-                  onClick={handleSubmit} // Handle form submission on button click
+                  type="button"
+                  onClick={handleSendOtp}
+                  disabled={loading}
+                  className="bg-black text-white py-3 rounded-lg font-semibold hover:bg-gray-800"
                 >
-                  <svg
-                    className="w-6 h-6 -ml-2"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <path d="M16 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" />
-                    <circle cx="8.5" cy="7" r="4" />
-                    <path d="M20 8v6M23 11h-6" />
-                  </svg>
-                  <span className="ml-3">Sign Up</span>
+                  {loading ? "Sending OTP..." : "Verify User"}
                 </button>
-                <p className="mt-6 text-xs text-gray-600 text-center">
-                  Already have an account?{" "}
-                  <a href="">
-                    <span className="text-black font-semibold">Sign in</span>
-                  </a>
-                </p>
-              </div>
-            </div>
+              ) : (
+                <>
+                  <input
+                    type="text"
+                    name="Code"
+                    placeholder="Enter OTP sent to email"
+                    value={formData.Code}
+                    onChange={handleChange}
+                    className="px-5 py-3 rounded-lg bg-gray-100 border text-sm"
+                    required
+                  />
+                  <button
+                    type="submit"
+                    className="bg-black text-white py-3 rounded-lg font-semibold hover:bg-gray-800"
+                  >
+                    {loading ? "Submitting..." : "Submit Registration"}
+                  </button>
+                </>
+              )}
+
+              <div className="text-center text-sm text-gray-500 mt-4">or</div>
+
+              <div ref={googleButtonRef} className="flex justify-center mt-3"></div>
+
+              <p className="mt-6 text-xs text-gray-600 text-center">
+                Already have an account?{" "}
+                <a href="/login" className="text-black font-semibold">
+                  Sign in
+                </a>
+              </p>
+            </form>
           </div>
         </div>
       </div>

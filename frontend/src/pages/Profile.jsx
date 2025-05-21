@@ -28,7 +28,7 @@ const Profile = () => {
 
       try {
         // Make a GET request to fetch user data using the email
-        const response = await axios.get('https://petcare-1.onrender.com/Signup/Get', {
+        const response = await axios.get('http://localhost:4000/Signup/Get', {
           params: { email }, // Pass email as query parameter
         });
         console.log(response.data);
@@ -51,7 +51,7 @@ const Profile = () => {
 
       try {
         // Make a GET request with the email as a query parameter for orders
-        const response = await axios.get('https://petcare-1.onrender.com/Order/Orderhistory', {
+        const response = await axios.get('http://localhost:4000/Order/Orderhistory', {
           params: { email }, // Pass email as query parameter
         });
         console.log(response.data);
@@ -80,8 +80,13 @@ const Profile = () => {
   }
 
   // Extract address fields (city, street, zip) from the address object
-  const { city, street, zip } = user.Address[0];
-
+  if(user?.Address.length === 0) {
+    return <div>No data found</div>; // Handle case where address is not available 
+  }
+  
+  const { city, street, zip } = user?.Address[0];
+  
+  
   return (
     <div className="bg-gray-100 min-h-screen pt-4 py-6 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">

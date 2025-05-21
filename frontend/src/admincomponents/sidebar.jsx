@@ -31,7 +31,7 @@ function Sidebar() {
       {/* Sidebar */}
       <div
         className={`mt-0 w-64 h-full fixed left-0 top-16 bg-yellow-500 text-black p-5 overflow-y-auto transition-transform duration-300 z-50 ${
-          isOpen ? ' w-full transform translate-x-0' : 'transform -translate-x-full'
+          isOpen ? ' w-full md:w-64 transform translate-x-0' :  '  transform -translate-x-full'
         } md:transform md:translate-x-0`}
       >
         <ul className="space-y-1">
@@ -117,14 +117,15 @@ function Sidebar() {
           </li>
           <li>
             <Link
-              to="/adminpanel/settings"
+              to="/adminpanel/SellPet"
               onClick={toggleSidebar} // Close sidebar on click
               className="flex items-center space-x-3 hover:bg-gray-100 p-3 rounded-lg transition duration-300"
             >
-              <FaCog className="text-xl" />
-              <span>Settings</span>
+              <FaServicestack className="text-xl" />
+              <span>SellPetApplications</span>
             </Link>
           </li>
+        
           <li>
             <Link
               to="/adminpanel/order-history"
@@ -135,54 +136,14 @@ function Sidebar() {
               <span>Order History</span>
             </Link>
           </li>
-          <li>
+            <li>
             <Link
-              to="/inventory"
+              to="/adminpanel/settings"
               onClick={toggleSidebar} // Close sidebar on click
               className="flex items-center space-x-3 hover:bg-gray-100 p-3 rounded-lg transition duration-300"
             >
-              <FaClipboardList className="text-xl" />
-              <span>Inventory</span>
-            </Link>
-          </li>
-          <li>
-            <Link
-              to="/customer-support"
-              onClick={toggleSidebar} // Close sidebar on click
-              className="flex items-center space-x-3 hover:bg-gray-100 p-3 rounded-lg transition duration-300"
-            >
-              <FaHeadset className="text-xl" />
-              <span>Customer Support</span>
-            </Link>
-          </li>
-          <li>
-            <Link
-              to="/reviews"
-              onClick={toggleSidebar} // Close sidebar on click
-              className="flex items-center space-x-3 hover:bg-gray-100 p-3 rounded-lg transition duration-300"
-            >
-              <FaInfoCircle className="text-xl" />
-              <span>Reviews</span>
-            </Link>
-          </li>
-          <li>
-            <Link
-              to="/payment"
-              onClick={toggleSidebar} // Close sidebar on click
-              className="flex items-center space-x-3 hover:bg-gray-100 p-3 rounded-lg transition duration-300"
-            >
-              <FaDollarSign className="text-xl" />
-              <span>Payments</span>
-            </Link>
-          </li>
-          <li>
-            <Link
-              to="/shipping"
-              onClick={toggleSidebar} // Close sidebar on click
-              className="flex items-center space-x-3 hover:bg-gray-100 p-3 rounded-lg transition duration-300"
-            >
-              <FaShippingFast className="text-xl" />
-              <span>Shipping</span>
+              <FaCog className="text-xl" />
+              <span>Settings</span>
             </Link>
           </li>
         </ul>

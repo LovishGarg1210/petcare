@@ -23,7 +23,10 @@ import Success from './pages/Success.jsx'
 import EditProfile from './pages/Editprofilepage.jsx'
 import UpdateEmailPassword from './pages/Editpassword.jsx'
 import Footer from './pages/Footer.jsx'
-
+import ForgetPassword from './pages/Forgetpassword.jsx'
+import PetGallery from './pages/PetGallery.jsx'
+import ScrollToTop from './pages/ScrollSmooth.jsx'
+import PetListingForm from './pages/SellpetPage.jsx'
 
 function App() {
  
@@ -45,15 +48,20 @@ function App() {
         </div>
        
         <div>
+               <ScrollToTop/>
 
         <Routes>
+     
           <Route path="/" element={<HomePage/>} />
           <Route path="/about" element={<AboutPage/>} />
-          <Route path="/Services" element={<ServicesPage/>} />
+          <Route path="/Services" element={<PetGallery/>} />
           <Route path="/products" element={<PetProductsPage/>} />
+          <Route path="/Gallery" element={<PetGallery/>} />
           <Route path="/appointments" element={<AppointmentPage/>} />
+          <Route path="/Sell" element={<PetListingForm/>} />
           <Route path="/pets" element={<PetPage/>} />
           <Route path="/login" element={<LoginWithGoogleButton/>} />
+           <Route path="/forgetpass" element={<ForgetPassword/>} />
           <Route path="/signup" element={<RegistartionForm/>} />
           <Route path="/profile" element={<Profile/>} />
           <Route path="/update-profile" element={<EditProfile/>} />  

@@ -2,17 +2,18 @@ const mongoose = require("mongoose");
 const SignupSchema = new mongoose.Schema({
     Name: {
         type: String,
-        required: true,
+        
         trim: true,
     },
     Email: {
         type: String,
-        required: true,
+       
     },
     Contact: {
         type: Number,
-        required: true,
+        
     },
+     GoogleId: { type: String },
     role: {
         type: String,
         enum: ['User', 'Admin'],
@@ -20,7 +21,7 @@ const SignupSchema = new mongoose.Schema({
     },
     Password: {
         type: String,
-        required: true,
+      
     },
     Address: [
         {

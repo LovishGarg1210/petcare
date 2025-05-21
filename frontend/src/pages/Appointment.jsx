@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import axios from "axios"; // Import axios
+import axios from "axios";
 
 const AppointmentPage = () => {
   const [ownerName, setOwnerName] = useState('');
@@ -9,10 +9,11 @@ const AppointmentPage = () => {
   const [appointmentDate, setAppointmentDate] = useState('');
   const [appointmentTime, setAppointmentTime] = useState('');
   const [message, setMessage] = useState('');
+  const [loading, setLoading] = useState(false); // Loader state
 
-  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true); // Start loader
 
     const appointmentData = {
       ownerName,
@@ -24,11 +25,9 @@ const AppointmentPage = () => {
     };
 
     try {
-      // Send data to backend using axios
-      const response = await axios.post("https://petcare-1.onrender.com/Appointment/Save", appointmentData);
-      console.log("Appointment booked:", response.data);
+      const response = await axios.post("http://localhost:4000/Appointment/Save", appointmentData);
+      
       alert(`Appointment for ${ownerName} has been booked!`);
-      // Optionally clear the form after successful submission
       setOwnerName('');
       setEmail('');
       setPhone('');
@@ -38,6 +37,8 @@ const AppointmentPage = () => {
     } catch (error) {
       console.error("Error booking appointment:", error);
       alert("There was an error booking your appointment. Please try again.");
+    } finally {
+      setLoading(false); // Stop loader
     }
   };
 
@@ -72,7 +73,6 @@ const AppointmentPage = () => {
           </p>
 
           <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Owner Name */}
             <div className="flex flex-col space-y-2">
               <label htmlFor="ownerName" className="text-lg font-medium text-gray-700">Owner Name</label>
               <input
@@ -87,7 +87,6 @@ const AppointmentPage = () => {
               />
             </div>
 
-            {/* Email */}
             <div className="flex flex-col space-y-2">
               <label htmlFor="email" className="text-lg font-medium text-gray-700">Email Address</label>
               <input
@@ -102,7 +101,6 @@ const AppointmentPage = () => {
               />
             </div>
 
-            {/* Phone */}
             <div className="flex flex-col space-y-2">
               <label htmlFor="phone" className="text-lg font-medium text-gray-700">Phone Number</label>
               <input
@@ -117,7 +115,6 @@ const AppointmentPage = () => {
               />
             </div>
 
-            {/* Appointment Date */}
             <div className="flex flex-col space-y-2">
               <label htmlFor="appointmentDate" className="text-lg font-medium text-gray-700">Appointment Date</label>
               <input
@@ -131,7 +128,6 @@ const AppointmentPage = () => {
               />
             </div>
 
-            {/* Appointment Time */}
             <div className="flex flex-col space-y-2">
               <label htmlFor="appointmentTime" className="text-lg font-medium text-gray-700">Appointment Time</label>
               <input
@@ -145,7 +141,6 @@ const AppointmentPage = () => {
               />
             </div>
 
-            {/* Message */}
             <div className="flex flex-col space-y-2">
               <label htmlFor="message" className="text-lg font-medium text-gray-700">Additional Message</label>
               <textarea
@@ -159,13 +154,35 @@ const AppointmentPage = () => {
               />
             </div>
 
-            {/* Submit Button */}
             <div className="text-center">
               <button
                 type="submit"
-                className="w-full py-3 mt-6 bg-black text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 transition duration-300"
+                className="w-full py-3 mt-6 bg-black text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 transition duration-300 flex items-center justify-center gap-2"
+                disabled={loading}
               >
-                Schedule Appointment
+                {loading && (
+                  <svg
+                    className="animate-spin h-5 w-5 text-white"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                    ></circle>
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+                    ></path>
+                  </svg>
+                )}
+                {loading ? "Scheduling..." : "Schedule Appointment"}
               </button>
             </div>
           </form>

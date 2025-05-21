@@ -1,69 +1,78 @@
 import React, { useState, useEffect } from "react";
 import { FaSearch } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
-import axios from 'axios';
+import axios from "axios";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation, Pagination, Autoplay } from "swiper/modules";
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
 
 const PetProductsPage = () => {
   const navigate = useNavigate();
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [searchQuery, setSearchQuery] = useState("");
-  const [currentSlide, setCurrentSlide] = useState(0);
   const [cart, setCart] = useState([]);
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
   const [sliderImages, setSliderImages] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  console.log("sliderimages", sliderImages);
 
   const fetchProducts = async () => {
     try {
-      const response = await axios.get('https://petcare-1.onrender.com/product/Get');
+      const response = await axios.get("http://localhost:4000/product/Get");
+      if (Array.isArray(response.data.data)) {
+        setProducts(response.data.data);
+      }
       const productsData = response.data.data;
-
-      setProducts(productsData);
-
-      const uniqueCategories = ["All", ...new Set(productsData.map(product => product.category))];
+      const uniqueCategories = ["All", ...new Set(productsData.map((product) => product.category))];
       setCategories(uniqueCategories);
     } catch (error) {
-      console.error('Error fetching products:', error);
+      console.error("Error fetching products:", error);
     }
   };
 
   const fetchCarouselImages = async () => {
     try {
-      const response = await axios.get('https://petcare-1.onrender.com/Crousel/Get');
-      setSliderImages(response.data.data);
-      console.log(response.data.data)
+      const response = await axios.get("http://localhost:4000/Crousel/Get");
+      if (Array.isArray(response.data.data)) {
+        setSliderImages(response.data.data);
+      }
     } catch (error) {
-      console.error('Error fetching carousel images:', error);
+      console.error("Error fetching carousel images:", error);
     }
   };
 
   const Get = async () => {
     try {
-      const emailId = localStorage.getItem('user');
-      const data = await axios.get(`https://petcare-1.onrender.com/Cart/Get?emailId=${emailId}`);
+      const emailId = localStorage.getItem("user");
+      const data = await axios.get(`http://localhost:4000/Cart/Get?emailId=${emailId}`);
       setCart(data.data.data.products);
     } catch (error) {
-      console.error("Error fetching cart:", error);
+      console.error(`Error fetching cart: ${error}`);
     }
   };
 
   useEffect(() => {
-    fetchProducts();
-    fetchCarouselImages();
-    Get();
+    const fetchData = async () => {
+      setLoading(true);
+      await Promise.all([fetchProducts(), fetchCarouselImages(), Get()]);
+      setLoading(false);
+    };
+    fetchData();
   }, []);
 
-  const apiUrl = "https://petcare-1.onrender.com/Cart/Add";
+  const apiUrl = "http://localhost:4000/Cart/Add";
 
   const addToCart = async (product) => {
-    const emailId = localStorage.getItem('user');
+    const emailId = localStorage.getItem("user");
     if (emailId) {
       try {
         const response = await fetch(apiUrl, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             emailId,
             productId: product._id,
@@ -85,33 +94,31 @@ const PetProductsPage = () => {
         alert("An error occurred. Please try again later.");
       }
     } else {
-      navigate('/login');
+      navigate("/login");
     }
   };
 
-  const filteredProducts = selectedCategory === "All"
-    ? products
-    : products.filter((product) => product.category === selectedCategory);
+  const filteredProducts =
+    selectedCategory === "All"
+      ? products
+      : products.filter((product) => product.category === selectedCategory);
 
   const searchFilteredProducts = filteredProducts.filter((product) =>
     product.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentSlide((prevSlide) => (prevSlide + 1) % sliderImages.length);
-    }, 6000);
-    return () => clearInterval(interval);
-  }, [sliderImages.length]);
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="container mx-auto p-6">
-      {/* Header Section */}
       <header className="flex items-center justify-between py-4 px-6 bg-white border border-gray-300 rounded-lg shadow-lg mb-8">
-        {/* "My Store" only for md screens and larger */}
         <h1 className="hidden md:block text-3xl font-bold text-gray-800">My Store</h1>
-
-        {/* Search Bar */}
         <div className="relative flex items-center w-full md:w-2/3">
           <FaSearch className="absolute left-4 text-gray-500" size={20} />
           <input
@@ -122,51 +129,41 @@ const PetProductsPage = () => {
             onChange={(e) => setSearchQuery(e.target.value)}
           />
         </div>
-
-        {/* Cart Icon */}
         <div className="relative ml-4">
-          <button onClick={() => navigate('/cartPage')} className="bg-gray-300 p-3 rounded-full">
-            <span role="img" aria-label="cart">🛒</span>
+          <button onClick={() => navigate("/cartPage")} className="bg-gray-300 p-3 rounded-full">
+            <span role="img" aria-label="cart">
+              🛒
+            </span>
           </button>
-          <span className="absolute top-0 right-0 bg-red-500 text-white text-xs rounded-full px-1">{cart.length}</span>
+          <span className="absolute top-0 right-0 bg-red-500 text-white text-xs rounded-full px-1">
+            {cart.length}
+          </span>
         </div>
       </header>
 
-      {/* Slider Section */}
-      <div className="relative mb-8">
-        <div
-          className="w-full h-64 bg-cover bg-no-repeat bg-center rounded-lg shadow-lg"
-          style={{ backgroundImage: `url(${sliderImages[currentSlide]?.Url})` }}
-        >
-          <div className="absolute inset-0 bg-black bg-opacity-30"></div>
-          <div className="absolute top-0 left-0 right-0 bottom-0 flex items-center justify-between p-4">
-            <button
-              onClick={() => setCurrentSlide((currentSlide - 1 + sliderImages.length) % sliderImages.length)}
-              className="bg-white p-2 rounded-full shadow-md"
-            >
-              &#10094;
-            </button>
-            <button
-              onClick={() => setCurrentSlide((currentSlide + 1) % sliderImages.length)}
-              className="bg-white p-2 rounded-full shadow-md"
-            >
-              &#10095;
-            </button>
-          </div>
-        </div>
 
-        {/* Slide Indicator */}
-        <div className="absolute bottom-4 left-0 right-0 flex justify-center space-x-2">
-          {sliderImages.map((_, index) => (
-            <div
-              key={index}
-              className={`w-2 h-2 rounded-full ${currentSlide === index ? "bg-blue-500" : "bg-gray-500"}`}
-            ></div>
+      <div className="relative mb-8">
+        <Swiper
+          modules={[Navigation, Pagination, Autoplay]}
+         
+          pagination={{ clickable: true }}
+          autoplay={{ delay: 5000 }}
+          loop
+          className="rounded-lg shadow-lg"
+        >
+          {sliderImages.map((image, index) => (
+            <SwiperSlide key={index}>
+              <div
+                className="w-full h-64 bg-cover bg-no-repeat bg-center rounded-lg"
+                style={{backgroundImage : `url('${image.Url}')`}}
+              >
+               
+              </div>
+            </SwiperSlide>
           ))}
-        </div>
+        </Swiper>
       </div>
 
-      {/* Filter Section */}
       <div className="mb-8 text-center py-4 px-8 bg-white border border-gray-300 rounded-lg shadow-lg">
         <div className="flex flex-wrap justify-center gap-4">
           {categories.map((category) => (
@@ -181,17 +178,16 @@ const PetProductsPage = () => {
         </div>
       </div>
 
-      {/* Product Layout Section */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
         {searchFilteredProducts.length > 0 ? (
           searchFilteredProducts.map((product) => (
             <div key={product._id} className="bg-white border border-gray-300 rounded-lg shadow-lg p-4">
               <img src={product.image} alt={product.name} className="w-full h-40 object-cover rounded-lg" />
               <h3 className="text-lg font-semibold text-gray-800 mt-4">{product.name}</h3>
-              <p className="text-md text-gray-500 mt-2">${product.price.toFixed(2)}</p>
+              <p className="text-md text-gray-500 mt-2">Rs{product.price.toFixed(2)}</p>
               <button
                 onClick={() => addToCart(product)}
-                className="mt-4 w-full py-2 bg-gray-500 text-white rounded-lg"
+                className="mt-4 w-full py-2 bg-orange-500 text-white rounded-lg"
               >
                 Add to Cart
               </button>

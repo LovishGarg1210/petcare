@@ -20,13 +20,13 @@ function ProductPage() {
     const fetchData = async () => {
         setLoading(true);  // Set loading true while fetching
         try {
-            const response = await axios.get('https://petcare-1.onrender.com/product/Get');
+            const response = await axios.get('http://localhost:4000/product/Get');
             const normalizedProducts = response.data.data.map((product) => ({
                 ...product,
                 category: product.category.toLowerCase(),
             }));
             setProducts(normalizedProducts);
-            setCategories([...new Set(normalizedProducts.map((product) => product.category))]);
+            setCategories([...new Set(normalizedProducts.map((product) => product.category.toUpperCase()))]);
             setLoading(false); 
         } catch (error) {
             console.error(error);
@@ -72,11 +72,11 @@ function ProductPage() {
                 formData.append(key, newProduct[key]);
             }
             if (editingId) {
-                response = await axios.put(`https://petcare-1.onrender.com/product/Update/${editingId}`, formData, {
+                response = await axios.put(`http://localhost:4000/product/Update/${editingId}`, formData, {
                     headers: { 'Content-Type': 'multipart/form-data' }
                 });
             } else {
-                response = await axios.post('https://petcare-1.onrender.com/product/Save', formData, {
+                response = await axios.post('http://localhost:4000/product/Save', formData, {
                     headers: { 'Content-Type': 'multipart/form-data' }
                 });
             }
@@ -115,7 +115,7 @@ function ProductPage() {
         const confirmDelete = window.confirm("Are you sure you want to delete this product?");
         if (confirmDelete) {
             try {
-                await axios.delete(`https://petcare-1.onrender.com/product/Delete/${id}`);
+                await axios.delete(`http://localhost:4000/product/Delete/${id}`);
                 alert('Product deleted successfully');
                 await fetchData();
             } catch (error) {

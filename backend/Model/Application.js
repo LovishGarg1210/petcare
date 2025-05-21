@@ -23,6 +23,10 @@ const ApplicationSchema = new mongoose.Schema({
  
     default: 'Pending'
   },
+  email:{
+    type:String,
+    
+  }
 },
 {
   submittedAt: { type: Date, default: Date.now }

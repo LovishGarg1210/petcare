@@ -3,8 +3,8 @@ import { Link } from 'react-router-dom';  // For React Router Navigation
 
 const Footer = () => {
   return (
-    <footer className="bg-gray-200 text-gray-700 py-6">
-      <div className="max-w-7xl mx-auto px-6 sm:px-8">
+    <footer className="bg-orange-50 text-black py-6">
+      <div className="max-w-5xl mx-auto px-6 sm:px-8">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* About Us */}
           <div className="space-y-4">

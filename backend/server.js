@@ -18,7 +18,7 @@ const AppointmentRouter=require("../backend/Router/Appointments");
 const SignupRouter=require("../backend/Router/Signup");
 const CartRouter=require("../backend/Router/AddToCart");
 const OrderRouter=require("../backend/Router/order");
-
+const router =require("../backend/Router/SellPetModal")
 // Initialize express app
 const app = express();
 // Load environment variables
@@ -27,11 +27,13 @@ dotenv.config();
 // Middleware setup
 app.use(express.static("public"));
 app.use(fileuploader());
-// app.use(cors());
- app.use(cors({   origin:['https://petcare99.netlify.app',"https://petcare-1.onrender.com "],
+app.use(cors());
+//  app.use(cors({   origin:['https://petcare99.netlify.app','http://localhost:4000']
    
-}));
+// }));
 app.use(express.json());
+
+
 // Connect to the database
 connectDB().then(() => {
     // Start the server if database connection is successful
@@ -60,5 +62,6 @@ app.use('/Appointment',AppointmentRouter);
 app.use('/Signup',SignupRouter);
 app.use('/Cart',CartRouter);
 app.use('/Order',OrderRouter);
+app.use('/SellPet',router);
 
 

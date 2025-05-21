@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios'; // For API calls
+import axios from 'axios';
 
 const AppointmentPage = () => {
   const [appointments, setAppointments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
 
-  // Fetch appointments from backend (e.g., MongoDB) via API
   useEffect(() => {
     fetchAppointments();
   }, []);
@@ -14,8 +13,8 @@ const AppointmentPage = () => {
   const fetchAppointments = async () => {
     try {
       setLoading(true);
-      const response = await axios.get('https://petcare-1.onrender.com/Appointment/Get'); // Update the endpoint accordingly
-      setAppointments(response.data); // Assuming the API returns an array of appointments
+      const response = await axios.get('http://localhost:4000/Appointment/Get');
+      setAppointments(response.data);
       setLoading(false);
     } catch (error) {
       console.error('Error fetching appointments:', error);
@@ -23,12 +22,26 @@ const AppointmentPage = () => {
     }
   };
 
-  // Handle search input change
   const handleSearch = (e) => {
     setSearch(e.target.value);
   };
 
-  // Filter appointments based on search query
+  const handleStatusUpdate = async (id, newStatus) => {
+    try {
+      const response = await axios.put(`http://localhost:4000/Appointment/postStatus/${id}`, {
+        status: newStatus
+      });
+      if (response.status === 200) {
+        const updated = appointments.map(app =>
+          app._id === id ? { ...app, status: newStatus } : app
+        );
+        setAppointments(updated);
+      }
+    } catch (err) {
+      console.error('Error updating status:', err);
+    }
+  };
+
   const filteredAppointments = appointments.filter((appointment) => {
     return (
       appointment.ownerName.toLowerCase().includes(search.toLowerCase()) ||
@@ -36,20 +49,17 @@ const AppointmentPage = () => {
     );
   });
 
-  // AI-powered feature suggestion (optional)
   const aiSuggestions = (appointment) => {
-    // You can add AI-based logic for automated suggestions like "Reschedule" or "Verify Information"
     return appointment.message && appointment.message.includes('check') ? 'Follow up on concerns' : 'No immediate action';
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 py-12 px-4 w-full md:ml-64 md:mt-16  py-12 px-6 mt-20">
+    <div className="min-h-screen bg-gray-100 py-12 px-4 w-full md:ml-64 md:mt-16 mt-20">
       <div className="max-w-6xl mx-auto bg-white shadow-xl rounded-xl p-6 md:p-8">
         <h2 className="text-3xl md:text-4xl font-semibold text-center text-black mb-8">
-          Admin Appointment Dashboard
+          Doctor Appointments
         </h2>
 
-        {/* Search Input */}
         <div className="mb-6 flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
           <input
             type="text"
@@ -60,7 +70,6 @@ const AppointmentPage = () => {
           />
         </div>
 
-        {/* Appointment Table */}
         {loading ? (
           <p className="text-center text-xl">Loading appointments...</p>
         ) : (
@@ -71,9 +80,10 @@ const AppointmentPage = () => {
                   <th className="py-3 px-2 md:px-6 text-xs md:text-base">Owner Name</th>
                   <th className="py-3 px-2 md:px-6 text-xs md:text-base">Email</th>
                   <th className="py-3 px-2 md:px-6 text-xs md:text-base">Phone</th>
-                  <th className="py-3 px-2 md:px-6 text-xs md:text-base">Appointment Date</th>
-                  <th className="py-3 px-2 md:px-6 text-xs md:text-base">Appointment Time</th>
+                  <th className="py-3 px-2 md:px-6 text-xs md:text-base">Date</th>
+                  <th className="py-3 px-2 md:px-6 text-xs md:text-base">Time</th>
                   <th className="py-3 px-2 md:px-6 text-xs md:text-base">Message</th>
+                  <th className="py-3 px-2 md:px-6 text-xs md:text-base">Status</th>
                   <th className="py-3 px-2 md:px-6 text-xs md:text-base">Action</th>
                 </tr>
               </thead>
@@ -87,10 +97,27 @@ const AppointmentPage = () => {
                     <td className="py-3 px-2 md:px-6 text-xs md:text-base">{appointment.appointmentTime}</td>
                     <td className="py-3 px-2 md:px-6 text-xs md:text-base">{appointment.message || 'No message'}</td>
                     <td className="py-3 px-2 md:px-6 text-xs md:text-base">
-                      {/* AI-powered suggestions */}
-                      <span className="text-xs md:text-sm text-gray-600">
-                        {aiSuggestions(appointment)}
+                      <span className={`font-semibold ${appointment.status === 'Accepted' ? 'text-green-500' : appointment.status === 'Rejected' ? 'text-red-500' : 'text-yellow-600'}`}>
+                        {appointment.status || 'Pending'}
                       </span>
+                    </td>
+                    <td className="py-3 px-2 md:px-6 text-xs md:text-base">
+                      {(appointment.status !== 'Accepted' && appointment.status !== 'Rejected') && (
+                        <div className="flex gap-2">
+                          <button
+                            onClick={() => handleStatusUpdate(appointment._id, 'Accepted')}
+                            className="bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600 text-xs"
+                          >
+                            Accept
+                          </button>
+                          <button
+                            onClick={() => handleStatusUpdate(appointment._id, 'Rejected')}
+                            className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 text-xs"
+                          >
+                            Reject
+                          </button>
+                        </div>
+                      )}
                     </td>
                   </tr>
                 ))}

@@ -65,6 +65,8 @@ const Navbar = () => {
           <Link to="/products" className="text-black text-xl hover:text-gray-200 transition duration-300">Products</Link>
           <Link to="/pets" className="text-black text-xl hover:text-gray-200 transition duration-300">Own Pet</Link>
           <Link to="/appointments" className="text-black text-xl hover:text-gray-200 transition duration-300">Appointments</Link>
+          <Link to="/Sell"  className="text-black text-lg hover:text-gray-500 transition duration-300">Sell Pet</Link>
+          
         </div>
 
         {/* Account and Login/Signup Buttons */}
@@ -98,6 +100,7 @@ const Navbar = () => {
           <Link to="/products" onClick={toggleMenu} className="text-black text-lg hover:text-gray-500 transition duration-300">Products</Link>
           <Link to="/pets" onClick={toggleMenu} className="text-black text-lg hover:text-gray-500 transition duration-300">Own Pet</Link>
           <Link to="/appointments" onClick={toggleMenu} className="text-black text-lg hover:text-gray-500 transition duration-300">Appointments</Link>
+          <Link to="/Sell" onClick={toggleMenu} className="text-black text-lg hover:text-gray-500 transition duration-300">Sell Pet</Link>
 
           {/* Mobile Account/Login/Signup Buttons */}
           {userEmail ? (

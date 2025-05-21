@@ -13,3 +13,4 @@ const AdminProtectedRoutes = () => {
 }
 
 export default AdminProtectedRoutes;
+
