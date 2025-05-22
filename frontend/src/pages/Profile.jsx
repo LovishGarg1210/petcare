@@ -28,7 +28,7 @@ const Profile = () => {
 
       try {
         // Make a GET request to fetch user data using the email
-        const response = await axios.get('http://localhost:4000/Signup/Get', {
+        const response = await axios.get('https://petcare-1.onrender.com/Signup/Get', {
           params: { email }, // Pass email as query parameter
         });
         console.log(response.data);
@@ -51,7 +51,7 @@ const Profile = () => {
 
       try {
         // Make a GET request with the email as a query parameter for orders
-        const response = await axios.get('http://localhost:4000/Order/Orderhistory', {
+        const response = await axios.get('https://petcare-1.onrender.com/Order/Orderhistory', {
           params: { email }, // Pass email as query parameter
         });
         console.log(response.data);

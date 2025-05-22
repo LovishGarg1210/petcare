@@ -31,7 +31,7 @@ function Services() {
     useEffect(() => {
         const Getdata = async () => {
             try {
-                const response = await axios.get("http://localhost:4000/Service/Get");
+                const response = await axios.get("https://petcare-1.onrender.com/Service/Get");
                 if (response) {
                     setService(response.data.data);
                 } else {
@@ -49,11 +49,11 @@ function Services() {
         try {
             let response;
             if (editingId) {
-                response = await axios.put(`http://localhost:4000/Service/Update/${editingId}`, newData, {
+                response = await axios.put(`https://petcare-1.onrender.com/Service/Update/${editingId}`, newData, {
                     headers: { 'Content-Type': 'multipart/form-data' }
                 });
             } else {
-                response = await axios.post("http://localhost:4000/Service/Save", newData, {
+                response = await axios.post("https://petcare-1.onrender.com/Service/Save", newData, {
                     headers: { 'Content-Type': 'multipart/form-data' }
                 });
             }
@@ -84,7 +84,7 @@ function Services() {
         const confirmDelete = window.confirm("Are you sure you want to delete this data?");
         if (confirmDelete) {
             try {
-                await axios.delete(`http://localhost:4000/Service/Delete/${id}`);
+                await axios.delete(`https://petcare-1.onrender.com/Service/Delete/${id}`);
                 alert('Data deleted successfully');
                 await Getdata();  
             } catch (error) {

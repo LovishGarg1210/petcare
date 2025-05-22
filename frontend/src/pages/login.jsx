@@ -21,7 +21,7 @@ const LoginWithGoogleButton = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:4000/Signup/validate", data);
+      const response = await axios.post("https://petcare-1.onrender.com/Signup/validate", data);
       dispatch(setUser(response.data.data.Email));
       localStorage.setItem("user", response.data.data.Email);
       localStorage.setItem("token", response.data.data.token);
@@ -49,7 +49,7 @@ const LoginWithGoogleButton = () => {
       const { name, email, sub: googleId } = userObject;
 
       // Send the decoded token data to your backend
-      const result = await axios.post("http://localhost:4000/Signup/GoogleLogin", {
+      const result = await axios.post("https://petcare-1.onrender.com/Signup/GoogleLogin", {
         Name: name,
         Email: email,
         GoogleId: googleId,

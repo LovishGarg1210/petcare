@@ -11,7 +11,7 @@ const ForgotPassword = () => {
 
   const handleSendCode = async () => {
     try {
-      const res = await axios.post("http://localhost:4000/signup/sendVerificationCode", { email });
+      const res = await axios.post("https://petcare-1.onrender.com/signup/sendVerificationCode", { email });
       alert(res.data.message);
       setCodeSent(true);
     } catch (err) {
@@ -21,7 +21,7 @@ const ForgotPassword = () => {
 
   const handleResetPassword = async () => {
     try {
-      const res = await axios.post("http://localhost:4000/signup/resetPassword", {
+      const res = await axios.post("https://petcare-1.onrender.com/signup/resetPassword", {
         email,
         verificationCode,
         newPassword

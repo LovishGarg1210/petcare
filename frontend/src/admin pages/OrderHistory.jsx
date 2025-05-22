@@ -10,7 +10,7 @@ const OrderHistory = () => {
   // Fetch order history (mocked data here, replace with actual API call)
   useEffect(() => {
     const fetchOrders = async () => {
-      const orderData = await axios.get('http://localhost:4000/Order/allOrderhistory');
+      const orderData = await axios.get('https://petcare-1.onrender.com/Order/allOrderhistory');
       setOrders(orderData.data.data);
       setFilteredOrders(orderData.data.data); // Initialize filtered orders with all data
     };

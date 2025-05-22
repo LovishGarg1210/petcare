@@ -26,7 +26,7 @@ const Setting = () => {
     const fetchProfile = async () => {
       const email = localStorage.getItem('user');
       try {
-        const response = await axios.get('http://localhost:4000/Signup/Get', { params: { email } });
+        const response = await axios.get('https://petcare-1.onrender.com/Signup/Get', { params: { email } });
         setProfile(response.data.user);
       } catch (error) {
         console.error('Error fetching profile data:', error);
@@ -61,7 +61,7 @@ const Setting = () => {
     e.preventDefault();
     const email = localStorage.getItem('user');
     try {
-      await axios.put('http://localhost:4000/Signup/Update', {
+      await axios.put('https://petcare-1.onrender.com/Signup/Update', {
         email,
         Name: profile.Name,
         Contact: profile.Contact,
@@ -77,7 +77,7 @@ const Setting = () => {
     const email = localStorage.getItem('user');
     if (passwords.newPassword === passwords.confirmNewPassword) {
       try {
-        await axios.put('http://localhost:4000/Signup/Update-password', {
+        await axios.put('https://petcare-1.onrender.com/Signup/Update-password', {
           email,
           currentPassword: passwords.currentPassword,
           newPassword: passwords.newPassword,
@@ -99,7 +99,7 @@ const Setting = () => {
   const handleNotificationSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.put('http://localhost:4000/admin/updateNotifications', notifications);
+      await axios.put('https://petcare-1.onrender.com/admin/updateNotifications', notifications);
       console.log('Notifications updated');
     } catch (error) {
       console.error('Error updating notifications:', error);

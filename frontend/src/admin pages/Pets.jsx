@@ -33,7 +33,7 @@ const Pets = () => {
   const fetchPets = async () => {
     setLoading(true);
     try {
-      const response = await axios.get("http://localhost:4000/pet/Get");
+      const response = await axios.get("https://petcare-1.onrender.com/pet/Get");
       const allPets = response.data.data;
       setPets(allPets);
       setFilteredPets(allPets);
@@ -59,11 +59,11 @@ const Pets = () => {
 
     try {
       if (editingPet) {
-        await axios.put(`http://localhost:4000/pet/Update/${editingPet._id}`, data, {
+        await axios.put(`https://petcare-1.onrender.com/pet/Update/${editingPet._id}`, data, {
           headers: { "Content-Type": "multipart/form-data" },
         });
       } else {
-        await axios.post("http://localhost:4000/pet/Save", data, {
+        await axios.post("https://petcare-1.onrender.com/pet/Save", data, {
           headers: { "Content-Type": "multipart/form-data" },
         });
       }
@@ -89,7 +89,7 @@ const Pets = () => {
 
   const deletePet = async (id) => {
     try {
-      await axios.delete(`http://localhost:4000/pet/Delete/${id}`);
+      await axios.delete(`https://petcare-1.onrender.com/pet/Delete/${id}`);
       setPets(pets.filter((pet) => pet._id !== id));
       setFilteredPets(filteredPets.filter((pet) => pet._id !== id));
     } catch (error) {

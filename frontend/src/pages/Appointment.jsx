@@ -25,7 +25,7 @@ const AppointmentPage = () => {
     };
 
     try {
-      const response = await axios.post("http://localhost:4000/Appointment/Save", appointmentData);
+      const response = await axios.post("https://petcare-1.onrender.com/Appointment/Save", appointmentData);
       
       alert(`Appointment for ${ownerName} has been booked!`);
       setOwnerName('');

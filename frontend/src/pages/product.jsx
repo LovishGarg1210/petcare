@@ -22,7 +22,7 @@ const PetProductsPage = () => {
 
   const fetchProducts = async () => {
     try {
-      const response = await axios.get("http://localhost:4000/product/Get");
+      const response = await axios.get("https://petcare-1.onrender.com/product/Get");
       if (Array.isArray(response.data.data)) {
         setProducts(response.data.data);
       }
@@ -36,7 +36,7 @@ const PetProductsPage = () => {
 
   const fetchCarouselImages = async () => {
     try {
-      const response = await axios.get("http://localhost:4000/Crousel/Get");
+      const response = await axios.get("https://petcare-1.onrender.com/Crousel/Get");
       if (Array.isArray(response.data.data)) {
         setSliderImages(response.data.data);
       }
@@ -48,7 +48,7 @@ const PetProductsPage = () => {
   const Get = async () => {
     try {
       const emailId = localStorage.getItem("user");
-      const data = await axios.get(`http://localhost:4000/Cart/Get?emailId=${emailId}`);
+      const data = await axios.get(`https://petcare-1.onrender.com/Cart/Get?emailId=${emailId}`);
       setCart(data.data.data.products);
     } catch (error) {
       console.error(`Error fetching cart: ${error}`);
@@ -64,7 +64,7 @@ const PetProductsPage = () => {
     fetchData();
   }, []);
 
-  const apiUrl = "http://localhost:4000/Cart/Add";
+  const apiUrl = "https://petcare-1.onrender.com/Cart/Add";
 
   const addToCart = async (product) => {
     const emailId = localStorage.getItem("user");

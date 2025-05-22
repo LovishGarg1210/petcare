@@ -22,7 +22,7 @@ const Payment = async (req, res) => {
                 quantity: item.productQuantity,
             })),
             mode: 'payment',
-            success_url: `http://localhost:4000/Order/Success?session_id={CHECKOUT_SESSION_ID}`,
+            success_url: `https://petcare99.netlify.app/Order/Success?session_id={CHECKOUT_SESSION_ID}`,
             cancel_url: `http://localhost:5173/cancel`,
             customer_email: emailId,
             // Handle address collection
@@ -70,7 +70,7 @@ const Success = async (req, res) => {
       await order.save();
   // Backend: Encoding items before sending
 const serializedItems = encodeURIComponent(JSON.stringify(order.items)); // Stringify and encode
-const successUrl = `http://localhost:5173/success?orderId=${order._id}&email=${session.customer_email}&totalAmount=${order.totalAmount}&items=${serializedItems}`;
+const successUrl = `https://petcare99.netlify.app/success?orderId=${order._id}&email=${session.customer_email}&totalAmount=${order.totalAmount}&items=${serializedItems}`;
 res.redirect(successUrl);
 
       // Redirect to the success page with order details as URL parameters

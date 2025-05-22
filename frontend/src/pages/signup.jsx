@@ -26,7 +26,7 @@ const RegistrationForm = () => {
     if (!formData.Email) return alert("Please enter your email first.");
     try {
       setLoading(true);
-      const response = await fetch("http://localhost:4000/Signup/verifyotp", {
+      const response = await fetch("https://petcare-1.onrender.com/Signup/verifyotp", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ Email: formData.Email }),
@@ -53,7 +53,7 @@ const RegistrationForm = () => {
 
     try {
       setLoading(true);
-      const response = await fetch("http://localhost:4000/Signup/save", {
+      const response = await fetch("https://petcare-1.onrender.com/Signup/save", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
@@ -92,7 +92,7 @@ const RegistrationForm = () => {
   const handleGoogleResponse = async (response) => {
     const userObject = jwtDecode(response.credential);
     try {
-      const res = await fetch("http://localhost:4000/Signup/GoogleSave", {
+      const res = await fetch("https://petcare-1.onrender.com/Signup/GoogleSave", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

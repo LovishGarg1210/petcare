@@ -13,7 +13,7 @@ const AppointmentPage = () => {
   const fetchAppointments = async () => {
     try {
       setLoading(true);
-      const response = await axios.get('http://localhost:4000/Appointment/Get');
+      const response = await axios.get('https://petcare-1.onrender.com/Appointment/Get');
       setAppointments(response.data);
       setLoading(false);
     } catch (error) {
@@ -28,7 +28,7 @@ const AppointmentPage = () => {
 
   const handleStatusUpdate = async (id, newStatus) => {
     try {
-      const response = await axios.put(`http://localhost:4000/Appointment/postStatus/${id}`, {
+      const response = await axios.put(`https://petcare-1.onrender.com/Appointment/postStatus/${id}`, {
         status: newStatus
       });
       if (response.status === 200) {

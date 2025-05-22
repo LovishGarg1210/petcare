@@ -7,7 +7,7 @@ export default function SellPetApplications() {
 
   const fetchApplications = async () => {
     try {
-      const res = await fetch('http://localhost:4000/SellPet/All');
+      const res = await fetch('https://petcare-1.onrender.com/SellPet/All');
       const data = await res.json();
       setApplications(data.data);
     } catch (error) {
@@ -19,7 +19,7 @@ export default function SellPetApplications() {
 
   const updateStatus = async (id, status) => {
     try {
-      const res = await fetch(`http://localhost:4000/SellPet/status/${id}`, {
+      const res = await fetch(`https://petcare-1.onrender.com/SellPet/status/${id}`, {
         method: 'Put',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status })

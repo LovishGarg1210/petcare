@@ -116,7 +116,7 @@ const handleSubmit = async (e) => {
     submitData.append('sellerInfoemail', formData.sellerInfo.email);
     submitData.append('sellerInfolocation', formData.sellerInfo.location);
     // Submit form
-    const response = await fetch('http://localhost:4000/SellPet/save', {
+    const response = await fetch('https://petcare-1.onrender.com/SellPet/save', {
       method: 'POST',
       body: submitData,
     });

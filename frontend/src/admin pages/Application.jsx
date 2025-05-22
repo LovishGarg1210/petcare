@@ -12,7 +12,7 @@ const Application = () => {
 
   const applicationData = async () => {
     try {
-      const response = await axios.get("http://localhost:4000/Application/Get");
+      const response = await axios.get("https://petcare-1.onrender.com/Application/Get");
       setApplications(response.data.data);
     } catch (error) {
       console.log(error);
@@ -27,7 +27,7 @@ const Application = () => {
     try {
       // Update backend status
       await axios.put(
-        `http://localhost:4000/Application/Update/${application._id}`,
+        `https://petcare-1.onrender.com/Application/Update/${application._id}`,
         { ...application, status }
       );
 
