@@ -22,7 +22,7 @@ const Payment = async (req, res) => {
                 quantity: item.productQuantity,
             })),
             mode: 'payment',
-            success_url: `https://petcare99.netlify.app/Order/Success?session_id={CHECKOUT_SESSION_ID}`,
+            success_url: `https://petcare-1.onrender.com/Order/Success?session_id={CHECKOUT_SESSION_ID}`,
             cancel_url: `http://localhost:5173/cancel`,
             customer_email: emailId,
             // Handle address collection
